@@ -10,6 +10,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('css/simple-notify.min.css') }}" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,4 +34,19 @@
             </main>
         </div>
     </body>
+    <script src="{{ asset('js/simple-notify.min.js') }}"></script>
+
+    <!-- Toast messages -->
+    @if(session('toast'))
+        <script>
+            
+                new Notify ({
+                    title: "{{ ucwords(session('status')) }}",
+                    text: "{{ ucwords(session('message')) }}",
+                    status: "{{ session('status') }}",
+                    autoclose: true,
+                })
+            
+        </script>
+    @endif
 </html>

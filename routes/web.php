@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,6 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::group(['prefix' => 'teams', 'as' => 'teams.'], function(){
+        Route::get('/', [TeamController::class, 'index'])->name('index');
+        Route::post('/', [TeamController::class, 'create'])->name('create');
+        Route::get('/delete/{id}', [TeamController::class, 'delete'])->name('delete');
+
+    });
 });
 
 require __DIR__.'/auth.php';
