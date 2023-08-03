@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ExceptionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
@@ -41,5 +42,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Route::group(['middleware' => 'lucent.auth'], function(){ // Todo:: middleware is already written
+Route::group([], function(){
+    Route::post('/register-exception', [ExceptionController::class, 'registerException']);
+});
 
 require __DIR__.'/auth.php';
