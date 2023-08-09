@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class TeamController extends Controller
 {
     public function index() 
-    {
+    {  
         $user = User::where('id', auth()->id())->with('teams', function($q){
             return $q->withCount('users');
         })->first();
@@ -42,4 +42,16 @@ class TeamController extends Controller
 
         return redirect()->route('teams.index')->with(['toast' => true, 'status' => 'success', 'message' => 'Team deleted successfully.']);
     }
+
+
+public function teamsInfo($id){
+        $role='';
+        $teams = Team::where('id',$id)->with('users')->first();
+        foreach($teams->users as $user){
+        if($user->pivot->user_id == auth()->id())
+        $role = $user->pivot->role;
+        }
+       return view('team.info',['teams'=>$teams->users,'teamName'=>$teams->name,'role'=>$role]);
+}
+
 }

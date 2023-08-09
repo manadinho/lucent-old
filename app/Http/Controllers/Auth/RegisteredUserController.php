@@ -12,15 +12,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): View
-    {
-        return view('auth.register');
+    public function create(Request $req): View
+    {  
+        if(auth()->user())
+        Auth::logout();
+        //dd(auth()->user());
+      
+        return view('auth.register',['userEmail'=>$req->email,'token'=>$req->token]);
     }
 
     /**
@@ -32,16 +37,21 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+                $user = User::where('email',$request->email)->first();
+                $user->update([
+                    'name' => $request->name,
+                    'password' => Hash::make($request->password),
+                ]);
+                
         event(new Registered($user));
 
         Auth::login($user);

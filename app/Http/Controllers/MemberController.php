@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Http\Requests\RequestMembers;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+ use App\Models\Team;
+ use App\Models\User;
+ use Illuminate\Support\Str;
+use App\Notifications\Invitation;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Route;
+
+
+class MemberController extends Controller
+{   protected $teamId;
+    
+    public function add(RequestMembers $req){
+       $this->teamId = $req->teamId;
+        $user = User::where('email',$req->email)->with('teams')->first();
+        $member = $user?$user->teams->where('id',$req->teamId)->first():null;
+        
+        if(!$member)
+        { 
+            if(!$user)
+            $user = User::create([
+                'email'=>$req->email,
+            ]);
+         return  $this->sendInvitation($user);
+           
+        }
+      
+        return back()->with(sendToast('Already existed in current Team',ERROR));
+
+     
+               
+    }
+
+private function sendInvitation(User $user){
+    $token = Str::random(40);
+   DB::table('team_user')->insert([
+        'user_id'=>$user->id,
+        'team_id'=>$this->teamId,
+        'role'=>'admin'
+   ]);
+    $invitation = DB::table('invitation')->insert([
+        'user_id'=>$user->id,
+        'token' => $token,
+        'expiry'=> Carbon::now()->addDay()
+    ]);
+    
+    $user->notify(new Invitation(
+        'Your are being invited in team '.
+        Team::where('id',$this->teamId)->first()->name,
+        $token
+        ));
+    return back()->with(sendToast('Member Invited'));
+
+}
+
+public function remove($user_id,$team_id)
+{  
+    $authId = auth()->id();
+    $member =  DB::table('team_user')
+                ->where('user_id',$authId)
+                ->where('team_id',$team_id)
+                ->first();
+
+                    if(($member->role != 'owner' && $user_id != $authId) ||
+                       ($member->role == 'owner' && $user_id == $authId))
+                        return back()->with(sendToast('Action not allowed',ERROR));
+               
+                DB::table('team_user')  
+                    ->where('team_id',$team_id)
+                    ->where('user_id',$user_id)
+                    ->delete();
+                return redirect()->route('teams.index')->with(sendToast('Member removed successfully'));
+        
+}
+
+}
+    
+

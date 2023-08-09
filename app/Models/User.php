@@ -20,17 +20,18 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'remeber_token',
         'password',
     ];
-
+//protected $gaurded = ['id'];
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
+        //'remember_token',
     ];
 
     /**
@@ -45,6 +46,6 @@ class User extends Authenticatable
 
     public function teams() 
     {
-        return $this->belongsToMany(Team::class, 'team_user', 'team_id', 'user_id')->withPivot('role');
+        return $this->belongsToMany(Team::class)->withPivot('role');
     }
 }

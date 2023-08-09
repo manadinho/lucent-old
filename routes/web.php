@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
+use Faker\Guesser\Name;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+//dd(config('app.url').'/register');
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,8 +37,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [TeamController::class, 'index'])->name('index');
         Route::post('/', [TeamController::class, 'create'])->name('create');
         Route::get('/delete/{id}', [TeamController::class, 'delete'])->name('delete');
+        Route::get('/info/{id}',[TeamController::class,'teamsInfo'])->name('info');
+});
+   
 
-    });
+});
+
+Route::group(['prefix'=>'members','as'=>'members.'],function(){
+    Route::post('/add',[MemberController::class,'add'])->name('add');
+   Route::get('/invite',[MemberController::class,'acceptInvitation'])->name('invite');
+   Route::get('remove/{user_id}/{team_id}',[MemberController::class,'remove'])->name('remove');
 });
 
 require __DIR__.'/auth.php';

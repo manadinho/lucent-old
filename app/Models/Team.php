@@ -13,11 +13,10 @@ class Team extends Model
 
     public function users() 
     {
-        return $this->belongsToMany(User::class, 'team_user', 'user_id', 'team_id')->withPivot('role');
+        return $this->belongsToMany(User::class)->withPivot('role');
     }
-
     public function createTeamUser(array $userids = [])
     {
-        $this->users()->sync($userids);
+        $this->users()->attach($userids);
     }
 }
