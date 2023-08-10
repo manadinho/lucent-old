@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Team;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,13 +12,14 @@ use Illuminate\Notifications\Notifiable;
 class Invitation extends Notification
 {
     use Notifiable , Queueable;
-    private $body,$token;
+    private $team, $token;
     /**
      * Create a new notification instance.
      */
-    public function __construct($body,$token)
+    public function __construct(Team $team, $token)
     {
-        $this->body = $body;
+        $this->team = $team;
+
         $this->token = $token;
     }
 
@@ -37,8 +39,8 @@ class Invitation extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line($this->body)
-                    ->action('Notification Action', url(config('app.url').':8000/register?token='.$this->token))
+                    ->line('Your are being invited in team'. $this->team->name)
+                    ->action('Click here.', url(config('app.url').'/register?token='.$this->token))
                     ->line('Thank you for using our application!');
     }
 

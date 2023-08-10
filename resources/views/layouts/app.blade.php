@@ -49,4 +49,17 @@
             
         </script>
     @endif
+
+    @if($errors->any())
+        <script>
+                
+                new Notify ({
+                    title: "Validation Error!",
+                    text: "{{ $errors->all()[0] }}",
+                    status: "error",
+                    autoclose: true,
+                })
+            
+        </script> 
+    @endif
 </html>

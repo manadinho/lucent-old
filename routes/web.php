@@ -3,22 +3,7 @@
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
-use Faker\Guesser\Name;
 use Illuminate\Support\Facades\Route;
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-//dd(config('app.url').'/register');
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,7 +23,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [TeamController::class, 'create'])->name('create');
         Route::get('/delete/{id}', [TeamController::class, 'delete'])->name('delete');
         Route::get('/info/{id}',[TeamController::class,'teamsInfo'])->name('info');
-});
+    });
    
 
 });

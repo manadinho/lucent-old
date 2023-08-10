@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TeamController extends Controller
 {
-    public function index() 
+    public function index(): View 
     {  
         $user = User::where('id', auth()->id())->with('teams', function($q){
             return $q->withCount('users');
         })->first();
 
         return view('team.index', ['teams' => $user->teams]);
-
     }
 
     public function create()
@@ -44,14 +43,20 @@ class TeamController extends Controller
     }
 
 
-public function teamsInfo($id){
-        $role='';
-        $teams = Team::where('id',$id)->with('users')->first();
-        foreach($teams->users as $user){
-        if($user->pivot->user_id == auth()->id())
-        $role = $user->pivot->role;
-        }
-       return view('team.info',['teams'=>$teams->users,'teamName'=>$teams->name,'role'=>$role]);
-}
+    public function teamsInfo($id): View
+    {
+        $team = Team::where('id',$id)->with('users')->first();
+
+        // foreach($teams->users as $user){
+        //     if($user->pivot->user_id == auth()->id())
+        //     $role = $user->pivot->role;
+        // }
+
+        return view('team.info',[
+            'members' => $team->users,
+            'teamName' => $team->name,
+            // 'role' => $role
+        ]);
+    }
 
 }
