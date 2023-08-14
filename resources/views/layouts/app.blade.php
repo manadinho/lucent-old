@@ -33,7 +33,9 @@
                 {{ $slot }}
             </main>
         </div>
+        <x-confirm-dialog></x-confirm-dialog>
     </body>
+
     <script src="{{ asset('js/simple-notify.min.js') }}"></script>
 
     <!-- Toast messages -->
@@ -62,4 +64,35 @@
             
         </script> 
     @endif
+
+    <script>
+
+        /**
+         * Displays a confirmation dialog and prevents the default event behavior.
+         * 
+         * @param {Event} event - The event triggered by an action (e.g., click).
+         * @param {HTMLElement} element - The element associated with the event.
+         * 
+         * @author Muhammad Imran Israr <mimranisrar6@gmail.com>
+         */
+        function confirmBefore(event, element) {
+            event.preventDefault();
+
+            document.querySelector('.confirm-dialog').style.display = 'block';
+
+            const cancelBtn = document.querySelector('#confirm-cancel-btn');
+
+            const deleteBtn = document.querySelector('#confirm-delete-btn');
+
+            cancelBtn.addEventListener('click', function() {
+                document.querySelector('.confirm-dialog').style.display = 'none';
+            })
+
+            deleteBtn.addEventListener('click', function() {
+                window.location.href = element.getAttribute('href');
+            })
+        }
+        
+
+    </script>
 </html>

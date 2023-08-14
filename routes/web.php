@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'teams', 'as' => 'teams.'], function(){
         Route::get('/', [TeamController::class, 'index'])->name('index');
         Route::post('/', [TeamController::class, 'create'])->name('create');
-        Route::get('/delete/{id}', [TeamController::class, 'delete'])->name('delete');
+        Route::get('/delete/{team}', [TeamController::class, 'delete'])->name('delete');
         Route::get('/info/{id}',[TeamController::class,'teamsInfo'])->name('info');
     });
    
