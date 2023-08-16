@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div x-data="{ open: false }">
+            <div x-data="{ open: false, email: '', role: '', close: function() { this.open = false; this.email = ''; this.role = ''; } }">
                 <div class="mb-4 text-sm text-gray-600">
                     <x-back-button></x-back-button>
                     <b>Home/Teams/{{$teamName}}</b>
@@ -28,13 +28,13 @@
                         <!-- MEMBER EMAIL -->
                         <div>
                             <x-input-label for="email" :value="__('Email')" />
-                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" value='' required autofocus />
+                            <x-text-input id="email" class="block mt-1 w-full" x-model="email" type="email" name="email" value='' required autofocus />
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="Select a Role" :value="__('Select a Role')" />
-                            <x-select-tag name="role" label="Select a Role">
+                            <x-select-tag x-model="role" name="role" label="Select a Role">
                                 <option >Select Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
@@ -49,7 +49,7 @@
                         </div>
                         <input type="hidden" name='teamId' value={{$members[0]->pivot->team_id}}>
                     </form>
-                    <button @click="open = false" class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Close</button>
+                    <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Close</button>
                     </div>
                 </div>
             </div>

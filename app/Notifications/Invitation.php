@@ -12,15 +12,17 @@ use Illuminate\Notifications\Notifiable;
 class Invitation extends Notification
 {
     use Notifiable , Queueable;
-    private $team, $token;
+    private $team, $token, $isNewUser;
     /**
      * Create a new notification instance.
      */
-    public function __construct(Team $team, $token)
+    public function __construct(Team $team, string $token, bool $isNewUser)
     {
         $this->team = $team;
 
         $this->token = $token;
+
+        $this->isNewUser = $isNewUser;
     }
 
     /**
@@ -40,8 +42,18 @@ class Invitation extends Notification
     {
         return (new MailMessage)
                     ->line('Your are being invited in team'. $this->team->name)
-                    ->action('Click here.', url(config('app.url').'/register?token='.$this->token))
+                    ->action('Click here.', $this->generateUrl())
                     ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Generate the appropriate URL based on the user and token.
+     *
+     * @return string The generated URL.
+     */
+    private function generateUrl(): string 
+    {
+        return $this->isNewUser ? url(config('app.url').'/register?token='.$this->token) : url(config('app.url').'/teams/info/'.$this->team->id);
     }
 
     /**

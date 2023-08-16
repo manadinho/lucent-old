@@ -22,20 +22,22 @@ class MemberController extends Controller
 
         $member = $user ? $user->teams->where('id',$req->teamId)->first() : null;
         
-        if (!$member) { 
+        if (!$member) {
+            $isNewUser = false;
             if(!$user) {
+                $isNewUser = true;
                 $user = User::create([
                     'email' => $req->email,
                 ]);
             }
 
-            return  $this->sendInvitation($user);    
+            return  $this->sendInvitation($user, $isNewUser);    
         }
       
         return back()->with(sendToast('Already existed in current Team',ERROR));         
     }
 
-    private function sendInvitation(User $user)
+    private function sendInvitation(User $user, bool $isNewUser)
     {
         $token = Str::random(40);
 
@@ -49,7 +51,8 @@ class MemberController extends Controller
         
         $user->notify(new Invitation(
             Team::find($this->teamId),
-            $token
+            $token,
+            $isNewUser
         ));
 
         return back()->with(sendToast('Member Invited'));

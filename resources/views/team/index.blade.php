@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div x-data="{ open: false }">
+            <div x-data="{ open: false, name: '', close: function() { this.open = false; this.name = '' } }">
                 <x-primary-button class="ml-3" @click="open = true">
                         {{ __('Create Team') }}
                 </x-primary-button>
@@ -23,7 +23,7 @@
                             <!-- Team Name -->
                             <div>
                                 <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                                <x-text-input id="name" class="block mt-1 w-full" x-model="name" type="text" name="name" :value="old('name')" required autofocus />
                                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
                             </div>
 
@@ -33,7 +33,7 @@
                                 </x-primary-button>
                             </div>
                         </form>
-                        <button @click="open = false" class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Close</button>
+                        <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Close</button>
                     </div>
                 </div>
             </div>
