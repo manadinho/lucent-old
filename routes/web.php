@@ -29,9 +29,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['prefix'=>'members','as'=>'members.'],function(){
-    Route::post('/add',[MemberController::class,'add'])->name('add');
-   Route::get('/invite',[MemberController::class,'acceptInvitation'])->name('invite');
-   Route::get('remove/{user_id}/{team_id}',[MemberController::class,'remove'])->name('remove');
+    Route::post('/add',[MemberController::class, 'add'])->name('add');
+   Route::get('/invite',[MemberController::class, 'acceptInvitation'])->name('invite');
+   Route::get('remove/{user_id}/{team_id}',[MemberController::class, 'remove'])->name('remove');
 });
 
 require __DIR__.'/auth.php';

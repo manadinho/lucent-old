@@ -18,6 +18,10 @@ class MemberController extends Controller
     {
         $this->teamId = $req->teamId;
 
+        if(!isTeamOwner($this->teamId)) {
+            return back()->with(sendToast('You cannot add member in current Team', ERROR));
+        }
+
         $user = User::where('email', $req->email)->with('teams')->first();
 
         $member = $user ? $user->teams->where('id',$req->teamId)->first() : null;
