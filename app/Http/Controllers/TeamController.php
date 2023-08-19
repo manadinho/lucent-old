@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -111,7 +112,22 @@ class TeamController extends Controller
         return view('team.info',[
             'members' => $team->users,
             'teamName' => $team->name,
+            'isTeamOwner' => $this->isTeamOwner($team)
         ]);
+    }
+
+    /**
+     * Check if the authenticated user is the owner of a given team.
+     *
+     * This function queries the 'team_user' table in the database to determine
+     * if the user with the currently authenticated ID is the owner of the provided team.
+     *
+     * @param Team $team The team object for which ownership needs to be checked.
+     * @return bool Returns true if the authenticated user is the owner of the team, false otherwise.
+     */
+    private function isTeamOwner(Team $team): bool
+    {
+        return DB::table('team_user')->where(['user_id' => auth()->id(), 'team_id' => $team->id])->first()->role === 'owner';
     }
 
 }
