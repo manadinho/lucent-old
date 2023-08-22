@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             
             $table->id();
-            $table->integer('team_id');
             $table->string('name');
+            $table->string('environment');
+            $table->integer('team_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

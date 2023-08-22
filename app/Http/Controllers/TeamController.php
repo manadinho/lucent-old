@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class TeamController extends Controller
     public function index(): View 
     {  
         $user = User::where('id', auth()->id())->with('teams', function($q){
-            return $q->withCount('users');
+            return $q->withCount('users', 'projects');
         })->first();
 
         return view('team.index', ['teams' => $user->teams]);
@@ -44,16 +45,20 @@ class TeamController extends Controller
         ]);
 
         // create new team
-        $team = Team::create([
+        $team = Team::updateOrCreate(['id' => request()->id], [
             'name' => $this->getUniqueName(request()->name),
         ]);
 
-        // add loggedin user as owner of the team
-        $team->createTeamUser([
-            auth()->id() => ['role' => 'owner']
-        ]);
+        if(!request()->id) {
+            // add loggedin user as owner of the team
+            $team->createTeamUser([
+                auth()->id() => ['role' => 'owner']
+            ]);
+        }
 
-        return redirect()->route('teams.index')->with(['toast' => true, 'status' => 'success', 'message' => 'Team created successfully.']);
+        $message = request()->id ? 'Team updated' : 'Team created';
+
+        return back()->with(sendToast($message));
     }
 
     /**
@@ -87,7 +92,7 @@ class TeamController extends Controller
      */
     public function delete(Team $team) 
     {
-        if ($team->canDelete()) {
+        if ($team->isUserOwner(auth()->id())) {
             $team->delete();
 
             return redirect()->route('teams.index')->with(['toast' => true, 'status' => 'success', 'message' => 'Team deleted successfully.']);
@@ -97,23 +102,33 @@ class TeamController extends Controller
     }
 
     /**
-     * Retrieve and display information about a team.
+     * Display the members of a team.
      *
-     * This function fetches information about a team based on its ID and
-     * displays the team members and team name.
-     *
-     * @param int $id The ID of the team to retrieve information for.
-     * @return \Illuminate\View\View The view containing team information.
+     * @param  Team  $team The team for which to display members.
+     * @return View        The view displaying the team members.
      */
-    public function teamsInfo($id): View
+    public function members(Team $team): View
     {
-        $team = Team::where('id',$id)->with('users')->first();
-
-        return view('team.info',[
+        return view('team.members',[
             'members' => $team->users,
             'teamName' => $team->name,
-            'isTeamOwner' => isTeamOwner($team->id)
+            'isTeamOwner' => $team->isUserOwner(auth()->id())
         ]);
+    }
+
+    /**
+     * Display the projects associated with a team.
+     *
+     * @param Team $team The team instance for which to display projects.
+     * @return \Illuminate\Contracts\View\View The view displaying the team's projects.
+     */
+    public function projects(Team $team): View 
+    {
+       return view('team.projects',[
+        'projects' => $team->projects,
+        'team' => $team,
+        'isTeamOwner' => $team->isUserOwner(auth()->id())
+       ]);
     }
 
 }

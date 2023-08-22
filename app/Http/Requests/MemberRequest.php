@@ -4,7 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RequestMembers extends FormRequest
+/**
+ * Class MemberRequest
+ * @package App\Http\Request\MemberRequest
+ * 
+ * @author Muhammad Imran Israr (mimranisrar6@gmail.com)
+ */
+class MemberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

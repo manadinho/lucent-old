@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Requests\RequestMembers;
+use App\Http\Requests\MemberRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Team;
 use App\Models\User;
@@ -14,7 +14,7 @@ class MemberController extends Controller
 {   
     protected $teamId;
     
-    public function add(RequestMembers $req)
+    public function add(MemberRequest $req)
     {
         $this->teamId = $req->teamId;
 

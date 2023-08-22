@@ -15,6 +15,16 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+    <style>
+        .modal-cancel-btn{
+            position: absolute;
+            margin-right: 14px !important;
+            left: 36%;
+            border-radius: 50%;
+            padding: 5px 12px;
+            top: 18%;
+        }
+    </style>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')

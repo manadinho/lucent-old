@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -23,9 +25,23 @@ class Team extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users() 
+    public function users(): BelongsToMany 
     {
         return $this->belongsToMany(User::class)->withPivot('role');
+    }
+
+    /**
+     * Define a relationship between Team and Project models.
+     *
+     * This function establishes a "hasMany" relationship between the Team model
+     * and the Project model. It allows a Team instance to have multiple associated
+     * Project instances.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
     }
 
     /**
@@ -42,14 +58,15 @@ class Team extends Model
     }
 
     /**
-     * Check if the currently authenticated user can delete the team.
+     * Check if the specified user is the owner of the team.
      *
-     * @return bool Returns true if the user can delete the team, false otherwise.
+     * @param int $user_id The ID of the user to check.
+     * @return bool Returns `true` if the user is the owner of the team, `false` otherwise.
      */
-    public function canDelete()
+    public function isUserOwner(int $user_id): bool
     {
         $team_user = DB::table('team_user')
-        ->where(['team_id' => $this->id, 'user_id' => auth()->id()])
+        ->where(['team_id' => $this->id, 'user_id' => $user_id])
         ->first();
 
         return $team_user && $team_user->role === 'owner';

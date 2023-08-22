@@ -21,8 +21,8 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div x-data="{ open: false, name: '', close: function() { this.open = false; this.name = '' } }">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="alpine()">
+            <div>
                 <x-primary-button class="ml-3" @click="open = true">
                         {{ __('Create Team') }}
                 </x-primary-button>
@@ -34,6 +34,7 @@
                         <h2 class="text-xl font-bold mb-4">Create Team</h2>
                         <form method="POST" action="{{ route('teams.create') }}">
                             @csrf
+                            <input type="hidden" name="id" x-model="id">
                             
                             <!-- Team Name -->
                             <div>
@@ -44,11 +45,11 @@
 
                             <div class="flex items-center justify-end mt-4">
                                 <x-primary-button class="ml-3">
-                                    {{ __('Create') }}
+                                    {{ __('Save') }}
                                 </x-primary-button>
                             </div>
                         </form>
-                        <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Close</button>
+                        <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
                     </div>
                 </div>
             </div>
@@ -57,9 +58,10 @@
                 <table class="w-full border border-collapse table-auto">
                     <thead class="">
                         <tr class="text-base font-bold text-left bg-gray-50">
-                        <th class="px-4 py-3 border-b-2 border-blue-500">Name</th>
-                        <th class="px-4 py-3 border-b-2 border-green-500">Members</th>
-                        <th class="px-4 py-3 border-b-2 border-red-500"></th>
+                            <th class="px-4 py-3 ">{{__('Name')}}</th>
+                            <th class="px-4 py-3 ">{{__('Members')}}</th>
+                            <th class="px-4 py-3 ">{{__('Projects')}}</th>
+                            <th class="px-4 py-3 "></th>
                         </tr>
                     </thead>
                     <tbody class="text-sm font-normal text-gray-700">
@@ -72,17 +74,33 @@
                                 
                                 </td>
                                 <td class="px-4 py-4">
-                                    <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
                                     {{ $team->users_count }}
                                     </span>
 
                                 </td>
                                 <td class="px-4 py-4">
-                                    <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z" fill="currentColor" /><path d="M9 9H11V17H9V9Z" fill="currentColor" /><path d="M13 9H15V17H13V9Z" fill="currentColor" /></svg>
+                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
+                                    {{ $team->projects_count }}
+                                    </span>
+
+                                </td>
+                                <td class="px-4 py-4">
+                                    @if(isTeamOwner($team->id))
+                                        <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
+                                            &#9759; {{ __('Delete') }}
+                                        </a>
+                                    @endif
+                                    @if(isTeamOwner($team->id))
+                                        <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
+                                            &#9759; {{ __('Edit') }}
+                                        </a>
+                                    @endif
+                                    <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
+                                        &#9759; {{ __('View Members') }}
                                     </a>
-                                    <a href="{{ route('teams.info',$team->id) }}" class="inline-flex float-right mr-2 items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z" fill="currentColor" /><path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor" /><path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 16C16 15.4477 15.5523 15 15 15H3Z" fill="currentColor" /></svg>
+                                    <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
+                                        &#9759; {{ __('View Projects') }}
                                     </a>
                                 </td>
                             </tr>
@@ -103,3 +121,26 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function alpine() {
+        return {
+            open: false, 
+            name: '',
+            id: null,
+            
+            close: function() { 
+                this.open = false;
+                this.id = null;
+                this.name = '';
+            },
+            
+            openEditModal: function(_team) {
+                const team = JSON.parse(_team);
+                this.id = team.id;
+                this.name = team.name;
+                this.open = true
+            }
+        }
+    }
+</script>
