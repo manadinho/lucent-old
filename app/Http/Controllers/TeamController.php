@@ -69,6 +69,13 @@ class TeamController extends Controller
      */
     private function getUniqueName(string $name): string
     {
+        // TO CHECK IF UPDATE REQUEST AND USER IS NOT UPDATIONG NAME
+        if (request()->id) {
+            if (Team::find(request()->id)->name ===  $name) {
+                return $name;
+            }
+        }
+
         $originalName = $name;
 
         $counter = 1;
