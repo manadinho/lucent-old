@@ -14,6 +14,8 @@ use Illuminate\Http\RedirectResponse;
  */
 class ProjectController extends Controller
 {
+    public $user;
+
     /**
      * Create or update a project based on the given request.
      *
@@ -22,13 +24,15 @@ class ProjectController extends Controller
      */
     public function create(ProjectRequest $request): RedirectResponse
     {
+        $this->user = auth()->user();
+
         $message = $request->id ? 'Project updated.' : 'Project created.';
 
         Project::updateOrCreate(['id' => $request->id], [
             'name' => $this->getUniqueName($request->name),
             'team_id' => $request->team_id,
             'environment' => $request->environment,
-            'user_id' => auth()->id()
+            'user_id' => $this->user->id
         ]);
 
         return back()->with(sendToast($message));
@@ -53,7 +57,7 @@ class ProjectController extends Controller
 
         $counter = 1;
 
-        while (Project::where('name', $name)->exists()) {
+        while (Project::where(['name' => $name, 'user_id' => $this->user->id])->exists()) {
             $name = $originalName . '-' . $counter;
 
             $counter++;

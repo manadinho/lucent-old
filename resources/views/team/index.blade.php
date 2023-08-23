@@ -70,7 +70,14 @@
                             <tr class="py-10 border-b border-gray-200 hover:bg-gray-100">
                                 <td class="px-4 py-4">
                                     
-                                    {{$team->name}}
+                                    <h4><b>{{$team->name}}</b>
+                                    <smal class="rounded-md bg-gray-200 px-2 text-gray-800 font-sm ml-2">
+                                        @if($team->user_id === auth()->id())
+                                            Owner
+                                        @else
+                                            Member
+                                        @endif        
+                                    </small>
                                 
                                 </td>
                                 <td class="px-4 py-4">

@@ -16,6 +16,8 @@ use Illuminate\View\View;
  */
 class TeamController extends Controller
 {
+    private $user;
+
     /**
      * Display the user's teams on the index page.
      *
@@ -23,7 +25,9 @@ class TeamController extends Controller
      */
     public function index(): View 
     {  
-        $user = User::where('id', auth()->id())->with('teams', function($q){
+        $this->user = auth()->user();
+
+        $user = User::where('id', $this->user->id)->with('teams', function($q){
             return $q->withCount('users', 'projects');
         })->first();
 
@@ -40,6 +44,8 @@ class TeamController extends Controller
      */
     public function create()
     {
+        $this->user = auth()->user();
+
         request()->validate([
             'name' => 'required'
         ]);
@@ -47,12 +53,14 @@ class TeamController extends Controller
         // create new team
         $team = Team::updateOrCreate(['id' => request()->id], [
             'name' => $this->getUniqueName(request()->name),
+            'user_id' => $this->user->id
+
         ]);
 
         if(!request()->id) {
             // add loggedin user as owner of the team
             $team->createTeamUser([
-                auth()->id() => ['role' => 'owner']
+                $this->user->id => ['role' => 'owner']
             ]);
         }
 
@@ -71,7 +79,7 @@ class TeamController extends Controller
     {
         // TO CHECK IF UPDATE REQUEST AND USER IS NOT UPDATIONG NAME
         if (request()->id) {
-            if (Team::find(request()->id)->name ===  $name) {
+            if(Team::find(request()->id)->name ===  $name) {
                 return $name;
             }
         }
@@ -80,7 +88,7 @@ class TeamController extends Controller
 
         $counter = 1;
 
-        while (Team::where('name', $name)->exists()) {
+        while (Team::where(['name' => $name, 'user_id' => $this->user->id])->exists()) {
             $name = $originalName . '-' . $counter;
 
             $counter++;
@@ -99,7 +107,9 @@ class TeamController extends Controller
      */
     public function delete(Team $team) 
     {
-        if ($team->isUserOwner(auth()->id())) {
+        $this->user = auth()->user();
+
+        if ($team->isUserOwner($this->user->id)) {
             $team->delete();
 
             return redirect()->route('teams.index')->with(['toast' => true, 'status' => 'success', 'message' => 'Team deleted successfully.']);
@@ -116,10 +126,12 @@ class TeamController extends Controller
      */
     public function members(Team $team): View
     {
+        $this->user = auth()->user();
+
         return view('team.members',[
             'members' => $team->users,
             'teamName' => $team->name,
-            'isTeamOwner' => $team->isUserOwner(auth()->id())
+            'isTeamOwner' => $team->isUserOwner($this->user->id)
         ]);
     }
 
@@ -131,10 +143,12 @@ class TeamController extends Controller
      */
     public function projects(Team $team): View 
     {
+        $this->user = auth()->user();
+        
        return view('team.projects',[
         'projects' => $team->projects,
         'team' => $team,
-        'isTeamOwner' => $team->isUserOwner(auth()->id())
+        'isTeamOwner' => $team->isUserOwner($this->user->id)
        ]);
     }
 
