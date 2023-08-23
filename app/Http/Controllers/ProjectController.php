@@ -57,7 +57,7 @@ class ProjectController extends Controller
 
         $counter = 1;
 
-        while (Project::where(['name' => $name, 'user_id' => $this->user->id])->exists()) {
+        while (Project::where(['name' => $name, 'user_id' => $this->user->id, 'team_id' => request()->team_id])->exists()) {
             $name = $originalName . '-' . $counter;
 
             $counter++;
