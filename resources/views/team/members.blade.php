@@ -74,57 +74,50 @@
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <table class="w-full border border-collapse table-auto">
-                    <thead class="">
-                        <tr class="text-base font-bold text-left bg-gray-50">
-                        <th class="px-4 py-3 ">User</th>
-                        <th class="px-4 py-3 ">Role</th>
-                        <th class="px-4 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm font-normal text-gray-700">
-                        @forelse($members as $member)
-
-                            <tr class="py-10 border-b border-gray-200 hover:bg-gray-100">
-                                <td class="flex flex-row items-center px-4 py-4">
-                                    <div class="flex w-10 h-10 mr-4">
-                                        <a href="#" class="relative block">
-                                        <img alt="profil" src="{{ asset('images/avatar.jpg') }}" class="object-cover w-10 h-10 mx-auto rounded-md" />
-                                        </a>
-                                    </div>
-                                    <div class="flex-1 pl-1">
-                                        <div class="font-medium">{{$member->name ?? 'N/A'}} ({{ $member->email }})</div>
-                                        <div class="text-sm text-red-600">
-                                            {{ $member->name ? '' : 'User Not Joined Yet' }}
+            <x-bladewind.table>
+                <x-slot name="header">
+                    <th>{{__('User')}}</th>
+                    <th>{{__('Role')}}</th>
+                    <th></th>
+                </x-slot>
+                    @forelse($members as $member)
+                        <tr>
+                            <td>
+                            <x-bladewind.list-item>
+                                <x-bladewind.avatar image="{{ asset('images/avatar.jpg') }}" size="small" />
+                                    <div class="ml-3">
+                                        <div class="text-sm font-medium text-slate-900">
+                                            {{$member->name ?? 'N/A'}} {{ $member->name ? '' : '(User Not Joined Yet)' }}
+                                        </div>
+                                        <div class="text-sm text-slate-500 truncate">
+                                        {{ $member->email }}
                                         </div>
                                     </div>
-                                </td>
-                                <td class="px-4 py-4">
-                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                    {{ ucwords($member->pivot->role) }}
-                                    </span>
+                                </x-bladewind.list-item>
+                            </td>
+                            <td>
+                                <x-bladewind.tag label="{{ ucwords($member->pivot->role) }}" color="gray" />
 
-                                </td>
-                                <td class="px-4 py-4" >
-                                    @if (($isTeamOwner && $member->pivot->user_id != auth()->id()) || (!$isTeamOwner && $member->pivot->user_id == auth()->id()))  
-                                        <a onclick="confirmBefore(event, this)" href="{{ route('members.remove',['user_id'=> $member->pivot->user_id,'team_id'=> $member->pivot->team_id]) }}" class="inline-flex float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
-                                            &#9759; {{('Delete')}}
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">
-                                    <h3 class="text-center">
-                                        No Data Found!
-                                    </h3>
-                                </td>
-                            </tr>
+                            </td>
+                            <td>
+                                @if (($isTeamOwner && $member->pivot->user_id != auth()->id()) || (!$isTeamOwner && $member->pivot->user_id == auth()->id()))  
+                                    <a onclick="confirmBefore(event, this)" href="{{ route('members.remove',['user_id'=> $member->pivot->user_id,'team_id'=> $member->pivot->team_id]) }}" class="inline-flex float-right items-center  px-2 py-1">
+                                        <x-bladewind.icon name="trash" />
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                @empty
+                        <tr>
+                            <td colspan="3">
+                                <h3 class="text-center">
+                                    No Data Found!
+                                </h3>
+                            </td>
+                        </tr>
 
-                        @endforelse
-                    </tbody>
-                </table>
+                @endforelse
+            </x-bladewind.table>
             </div>
 
         </div>

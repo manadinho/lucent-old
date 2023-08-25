@@ -76,48 +76,42 @@
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <table class="w-full border border-collapse table-auto">
-                    <thead class="">
-                        <tr class="text-base font-bold text-left bg-gray-50">
-                        <th class="px-4 py-3 ">{{__('Name')}}</th>
-                        <th class="px-4 py-3 ">{{__('Environment')}}</th>
-                        <th class="px-4 py-3 "></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm font-normal text-gray-700">
-                        @forelse($projects as $project)
-                            <tr class="py-10 border-b border-gray-200 hover:bg-gray-100">
-                                <td class="px-4 py-4">{{ $project->name }}</td>
-                                    
-                                <td class="px-4 py-4">
-                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                        {{ $project->environment }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4">
-                                    @if($isTeamOwner)
-                                        <a onclick="confirmBefore(event, this)" href="{{ route('projects.delete', $project->id) }}" class="inline-flex float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
-                                            &#9759; {{ __('Delete') }}
-                                        </a>
-                                    @endif
-                                    @if(isTeamOwner($team->id))
-                                        <a @click="openEditModal('{{ $project }}')" href="#" class="inline-flex mr-2 float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
-                                            &#9759; {{ __('Edit') }}
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">
-                                    <h3 class="text-center">
-                                        No Data Found!
-                                    </h3>
-                                </td>
-                            </tr>
-                        @endforelse    
-                    </tbody>
-                </table>
+            <x-bladewind.table>
+                <x-slot name="header">
+                    <th>{{__('Name')}}</th>
+                    <th>{{__('Environment')}}</th>
+                    <th>{{__('Actions')}}</th>
+                </x-slot>
+                @forelse($projects as $project)
+                    <tr>
+                        <td>{{ $project->name }}</td>
+                            
+                        <td>
+                            <x-bladewind.tag label="{{ ucwords($project->environment) }}" color="gray" />
+                        </td>
+                        <td>
+                            @if($isTeamOwner)
+                                <a onclick="confirmBefore(event, this)" href="{{ route('projects.delete', $project->id) }}" class="inline-flex float-right items-center">
+                                    <x-bladewind.icon name="trash" />
+                                </a>
+                            @endif
+                            @if(isTeamOwner($team->id))
+                                <a @click="openEditModal('{{ $project }}')" href="#" class="inline-flex mr-2 float-right items-center">
+                                    <x-bladewind.icon name="pencil-square" />
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="3">
+                            <h3 class="text-center">
+                                No Data Found!
+                            </h3>
+                        </td>
+                    </tr>
+                @endforelse 
+            </x-bladewind.table>
             </div>
 
         </div>

@@ -55,74 +55,66 @@
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <table class="w-full border border-collapse table-auto">
-                    <thead class="">
-                        <tr class="text-base font-bold text-left bg-gray-50">
-                            <th class="px-4 py-3 ">{{__('Name')}}</th>
-                            <th class="px-4 py-3 ">{{__('Members')}}</th>
-                            <th class="px-4 py-3 ">{{__('Projects')}}</th>
-                            <th class="px-4 py-3 "></th>
+                <x-bladewind.table>
+                    <x-slot name="header">
+                        <th>{{__('Name')}}</th>
+                        <th>{{__('Members')}}</th>
+                        <th>{{__('Projects')}}</th>
+                        <th>{{__('Actions')}}</th>
+                    </x-slot>
+                    @forelse($teams as $team)
+                        <tr>
+                            <td>
+                            <div class="ml-3">
+                                <div class="text-sm font-medium text-slate-900">
+                                    {{$team->name}}
+                                </div>
+                                <div class="text-sm text-slate-500 truncate">
+                                    @if($team->user_id === auth()->id())
+                                        {{ __('Owner')}}
+                                    @else
+                                        {{ __('Member')}}
+                                    @endif 
+                                </div>
+                            </div>
+                            </td>
+                            <td>
+                                <x-bladewind.tag label="{{ $team->users_count }}" color="gray" />
+                            </td>
+                            <td>
+                                <x-bladewind.tag label="{{ $team->projects_count }}" color="gray" />
+
+                            </td>
+                            <td>
+                                @if(isTeamOwner($team->id))
+                                    <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center px-2 py-1 ">
+                                        <x-bladewind.icon name="trash" />
+                                    </a>
+                                @endif
+                                @if(isTeamOwner($team->id))
+                                    <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center px-2 py-1 ">
+                                        <x-bladewind.icon name="pencil-square" />
+                                    </a>
+                                @endif
+                                <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
+                                    <x-bladewind.icon name="users" />
+                                </a>
+                                <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
+                                <x-bladewind.icon name="rectangle-stack" />
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="text-sm font-normal text-gray-700">
-                        @forelse($teams as $team)
+                    @empty
+                        <tr>
+                            <td colspan="3">
+                                <h3 class="text-center">
+                                    No Data Found!
+                                </h3>
+                            </td>
+                        </tr>
 
-                            <tr class="py-10 border-b border-gray-200 hover:bg-gray-100">
-                                <td class="px-4 py-4">
-                                    
-                                    <h4><b>{{$team->name}}</b>
-                                    <smal class="rounded-md bg-gray-200 px-2 text-gray-800 font-sm ml-2">
-                                        @if($team->user_id === auth()->id())
-                                            Owner
-                                        @else
-                                            Member
-                                        @endif        
-                                    </small>
-                                
-                                </td>
-                                <td class="px-4 py-4">
-                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                    {{ $team->users_count }}
-                                    </span>
-
-                                </td>
-                                <td class="px-4 py-4">
-                                    <span class="inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                    {{ $team->projects_count }}
-                                    </span>
-
-                                </td>
-                                <td class="px-4 py-4">
-                                    @if(isTeamOwner($team->id))
-                                        <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
-                                            &#9759; {{ __('Delete') }}
-                                        </a>
-                                    @endif
-                                    @if(isTeamOwner($team->id))
-                                        <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10">
-                                            &#9759; {{ __('Edit') }}
-                                        </a>
-                                    @endif
-                                    <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                        &#9759; {{ __('View Members') }}
-                                    </a>
-                                    <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center rounded-md bg-gray-500 hover:bg-gray-800 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
-                                        &#9759; {{ __('View Projects') }}
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">
-                                    <h3 class="text-center">
-                                        No Data Found!
-                                    </h3>
-                                </td>
-                            </tr>
-
-                        @endforelse
-                    </tbody>
-                </table>
+                    @endforelse
+                </x-bladewind.table>
             </div>
 
         </div>
