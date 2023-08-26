@@ -22,100 +22,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="alpine()">
-            <div>
-                <x-primary-button class="ml-3" @click="open = true">
-                        {{ __('Create Team') }}
-                </x-primary-button>
+            <!-- Who can do what -->
+            @include('includes.who-can-do-what')
 
-                <!-- Blurred background -->
-                <div x-show="open" @click.away="open = false" class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur">
-                    <!-- Modal content with custom width -->
-                    <div class="bg-white p-8 rounded shadow-lg w-96"> <!-- Adjust the width here -->
-                        <h2 class="text-xl font-bold mb-4">Create Team</h2>
-                        <form method="POST" action="{{ route('teams.create') }}">
-                            @csrf
-                            <input type="hidden" name="id" x-model="id">
-                            
-                            <!-- Team Name -->
-                            <div>
-                                <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input id="name" class="block mt-1 w-full" x-model="name" type="text" name="name" :value="old('name')" required autofocus />
-                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                            </div>
+            @include('includes.team-form')
 
-                            <div class="flex items-center justify-end mt-4">
-                                <x-primary-button class="ml-3">
-                                    {{ __('Save') }}
-                                </x-primary-button>
-                            </div>
-                        </form>
-                        <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-bladewind.table>
-                    <x-slot name="header">
-                        <th>{{__('Name')}}</th>
-                        <th>{{__('Members')}}</th>
-                        <th>{{__('Projects')}}</th>
-                        <th>{{__('Actions')}}</th>
-                    </x-slot>
-                    @forelse($teams as $team)
-                        <tr>
-                            <td>
-                            <div class="ml-3">
-                                <div class="text-sm font-medium text-slate-900">
-                                    {{$team->name}}
-                                </div>
-                                <div class="text-sm text-slate-500 truncate">
-                                    @if($team->user_id === auth()->id())
-                                        {{ __('Owner')}}
-                                    @else
-                                        {{ __('Member')}}
-                                    @endif 
-                                </div>
-                            </div>
-                            </td>
-                            <td>
-                                <x-bladewind.tag label="{{ $team->users_count }}" color="gray" />
-                            </td>
-                            <td>
-                                <x-bladewind.tag label="{{ $team->projects_count }}" color="gray" />
-
-                            </td>
-                            <td>
-                                @if(isTeamOwner($team->id))
-                                    <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center px-2 py-1 ">
-                                        <x-bladewind.icon name="trash" />
-                                    </a>
-                                @endif
-                                @if(isTeamOwner($team->id))
-                                    <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center px-2 py-1 ">
-                                        <x-bladewind.icon name="pencil-square" />
-                                    </a>
-                                @endif
-                                <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
-                                    <x-bladewind.icon name="users" />
-                                </a>
-                                <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
-                                <x-bladewind.icon name="rectangle-stack" />
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3">
-                                <h3 class="text-center">
-                                    No Data Found!
-                                </h3>
-                            </td>
-                        </tr>
-
-                    @endforelse
-                </x-bladewind.table>
-            </div>
+            @include('includes.team-listing')
 
         </div>
     </div>
@@ -127,6 +39,7 @@
             open: false, 
             name: '',
             id: null,
+            who_can_do: false,
             
             close: function() { 
                 this.open = false;

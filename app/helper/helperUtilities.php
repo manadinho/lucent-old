@@ -27,3 +27,26 @@ function isTeamOwner($teamId): bool
 {
     return DB::table('team_user')->where(['user_id' => auth()->id(), 'team_id' => $teamId])->first()->role === 'owner';
 }
+
+/**
+ * Check if a user has a specific permission within a team.
+ *
+ * This function checks whether a user with a given role within a team has a specific permission.
+ *
+ * @param string $team_id The ID of the team.
+ * @param string $user_id The ID of the user.
+ * @param string $permission_name The name of the permission to check.
+ *
+ * @return bool Returns true if the user has the specified permission, false otherwise.
+ */
+function canDo(string $team_id, string $user_id, string $permission_name): bool
+{
+    try{
+        $role = DB::table('team_user')->where(['team_id' => $team_id, 'user_id' => $user_id])->first()->role;
+
+        return config('lucentpermissions.'.$permission_name)[$role];
+
+    } catch(Exception $e){
+        return false;
+    }
+}

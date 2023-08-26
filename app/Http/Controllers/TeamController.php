@@ -130,7 +130,7 @@ class TeamController extends Controller
 
         return view('team.members',[
             'members' => $team->users,
-            'teamName' => $team->name,
+            'team' => $team,
             'isTeamOwner' => $team->isUserOwner($this->user->id)
         ]);
     }
