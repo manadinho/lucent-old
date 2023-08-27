@@ -22,8 +22,8 @@
                         <a @click="openEditModal('{{ $project }}')" href="#" class="inline-flex mr-2 float-right items-center">
                             <x-bladewind.icon name="pencil-square" />
                         </a>
-                        <a @click="openEditModal('{{ $project }}')" href="#" class="inline-flex mr-2 float-right items-center">
-                            <x-bladewind.icon name="document-magnifying-glass" />
+                        <a href="{{ route('projects.configurations', $project->id) }}" class="inline-flex mr-2 float-right items-center">
+                            <x-bladewind.icon name="cog" />
                         </a>
                     @endif
                 </td>

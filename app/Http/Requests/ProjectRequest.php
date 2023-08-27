@@ -29,7 +29,7 @@ class ProjectRequest extends FormRequest
     {
         return [
             'name' => 'required | max:50',
-            'environment' => 'required | in:production,staging,local',
+            'environment' => 'required | in:production,staging,development,local',
             'team_id' => 'required | exists:teams,id' 
         ];
     }

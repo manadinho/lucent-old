@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class Project
@@ -16,4 +17,14 @@ class Project extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    /**
+     * Generate a private key.
+     *
+     * @return string The generated private key.
+     */
+    public function generatePrivateKey(): string 
+    {
+        return Str::random(32);
+    }
 }

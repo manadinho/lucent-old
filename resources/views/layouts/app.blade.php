@@ -88,10 +88,15 @@
          * 
          * @author Muhammad Imran Israr <mimranisrar6@gmail.com>
          */
-        function confirmBefore(event, element) {
+        function confirmBefore(event, element, message = null) {
             event.preventDefault();
 
+            message ??= 'You will lose all of your data by deleting this. This action cannot be undone.';
+
+
             document.querySelector('.confirm-dialog').style.display = 'block';
+
+            document.querySelector('#confirm-dialog-message').textContent = message;
 
             const cancelBtn = document.querySelector('#confirm-cancel-btn');
 

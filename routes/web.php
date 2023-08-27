@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'projects', 'as' => 'projects.'], function() {
         Route::post('/', [ProjectController::class, 'create'])->name('create');
         Route::get('/delete/{project}', [ProjectController::class, 'delete'])->name('delete');
+        Route::get('/configurations/{project}', [ProjectController::class, 'configurations'])->name('configurations');
+        Route::get('/key-generate/{project}', [ProjectController::class, 'keyGenerate'])->name('key.generate');
     });
 });
 

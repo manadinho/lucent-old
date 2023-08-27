@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use App\Models\ProjectConfig;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * Class ProjectController
@@ -77,5 +79,34 @@ class ProjectController extends Controller
         $project->delete();
 
         return back()->with(sendToast('Project deleted.'));
+    }
+
+    /**
+     * Display the configurations for a project.
+     *
+     * @param Project $project The project for which configurations are being displayed.
+     * @return \Illuminate\Contracts\View\View The view containing the project configurations.
+     */
+    public function configurations(Project $project): View
+    {
+        $configurations = ProjectConfig::where('project_id', $project->id)->get();
+        
+        return view('team.project-config', [
+            'project' => $project,
+            'configurations' => $configurations
+        ]);
+    }
+
+    /**
+     * Generate a new key for the specified project and update the corresponding configuration.
+     *
+     * @param Project $project The project for which a new key is generated.
+     * @return \Illuminate\Http\RedirectResponse A redirect response to the previous page with a toast message.
+     */
+    public function keyGenerate(Project $project): RedirectResponse
+    {
+        ProjectConfig::where(['project_id' => $project->id, 'key' => 'lucent_key'])->update(['values' => json_encode(['key' => $project->generatePrivateKey()])]);
+
+        return back()->with(sendToast('Project key regenerated.'));
     }
 }

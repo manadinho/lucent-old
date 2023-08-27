@@ -21,6 +21,7 @@
                 <option >{{__('Select Environment')}}</option>
                 <option value="production">{{__('Production')}}</option>
                 <option value="staging">{{__('Staging')}}</option>
+                <option value="development">{{__('Development')}}</option>
                 <option value="local">{{__('Local')}}</option>
             </x-select-tag>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

@@ -4,14 +4,13 @@
         <div class="bg-white rounded-lg md:max-w-md md:mx-auto p-4 fixed inset-x-0 bottom-0 z-50 mb-4 mx-4 md:relative shadow-lg">
             <div class="md:flex items-center">
                 <div class="rounded-full border border-gray-300 flex items-center justify-center w-16 h-16 flex-shrink-0 mx-auto">
-                <i class="bx bx-error text-3xl">
-                &#9888;
-                </i>
+                    <i class="bx bx-error text-3xl">
+                        <x-bladewind.icon name="exclamation-triangle" />
+                    </i>
                 </div>
                 <div class="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
-                <p class="font-bold">Warning!</p>
-                <p class="text-sm text-gray-700 mt-1">You will lose all of your data by deleting this. This action cannot be undone.
-                </p>
+                    <p class="font-bold">Warning!</p>
+                    <p class="text-sm text-gray-700 mt-1" id="confirm-dialog-message"></p>
                 </div>
             </div>
             <div class="text-center md:text-right mt-4 md:flex md:justify-end">
