@@ -11,7 +11,7 @@
             <tr>
                 <td>{{__('CAN EDIT TEAM')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -23,10 +23,10 @@
             <tr>
                 <td>{{__('CAN DELETE TEAM')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -35,7 +35,7 @@
             <tr>
                 <td>{{__('CAN CREATE PROJECT')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -47,7 +47,7 @@
             <tr>
                 <td>{{__('CAN EDIT PROJECT')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -59,10 +59,10 @@
             <tr>
                 <td>{{__('CAN DELETE PROJECT')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -71,7 +71,7 @@
             <tr>
                 <td>{{__('CAN ADD MEMBER')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
@@ -83,10 +83,22 @@
             <tr>
                 <td>{{__('CAN REMOVE MEMBER')}}</td>
                 <td>
-                    <x-bladewind.icon class="text-green-400" name="x-circle"/>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>
+                </td>
+                <td>
+                    <x-bladewind.icon class="text-green-400" name="check-circle"/>
+                </td>
+            </tr>
+            <tr>
+                <td>{{__('CAN GENERATE LUCENT KEY')}}</td>
+                <td>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
+                </td>
+                <td>
+                    <x-bladewind.icon class="text-red-400" name="x-circle"/>
                 </td>
                 <td>
                     <x-bladewind.icon class="text-green-400" name="check-circle"/>

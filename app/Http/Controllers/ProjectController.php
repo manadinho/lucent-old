@@ -105,8 +105,12 @@ class ProjectController extends Controller
      */
     public function keyGenerate(Project $project): RedirectResponse
     {
-        ProjectConfig::where(['project_id' => $project->id, 'key' => 'lucent_key'])->update(['values' => json_encode(['key' => $project->generatePrivateKey()])]);
+        if(canDo($project->team_id, auth()->id(), 'can_generate_key')) {
+            ProjectConfig::where(['project_id' => $project->id, 'key' => 'lucent_key'])->update(['values' => json_encode(['key' => $project->generatePrivateKey()])]);
 
-        return back()->with(sendToast('Project key regenerated.'));
+            return back()->with(sendToast('Project key regenerated.'));
+        }
+
+        return back()->with(sendToast('You do not have permission.', ERROR));
     }
 }

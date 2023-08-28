@@ -58,9 +58,11 @@
                                         <div class="text-sm" id="lucent-key">LUCENT_KEY={{ $configurations->where('key', 'lucent_key')->first()->values['key'] }} <span class="cursor-pointer" @click='copy()'><x-bladewind.icon name="document-duplicate" /></span></div>
                                     </div>
                                     <div>
-                                        <a onclick="confirmBefore(event, this, 'Are you sure to regenrate key of {{$project->name}}')" href="{{ route('projects.key.generate', $project->id) }}">
-                                            <x-bladewind.icon name="arrow-path" />
-                                        </a>
+                                        @if(canDo($project->team_id, auth()->id(), 'can_generate_key'))
+                                            <a onclick="confirmBefore(event, this, 'Are you sure to regenrate key of {{$project->name}}', 'Generate')" href="{{ route('projects.key.generate', $project->id) }}">
+                                                <x-bladewind.icon name="arrow-path" />
+                                            </a>
+                                        @endif    
                                     </div>
                                 </div>
                             </x-bladewind.card>

@@ -36,4 +36,9 @@ return [
         'admin' => true,
         'user' => false,
     ],
+    'can_generate_key' => [
+        'owner' => true,
+        'admin' => false,
+        'user' => false,
+    ],
 ];
