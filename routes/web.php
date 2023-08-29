@@ -42,8 +42,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Route::group(['middleware' => 'lucent.auth'], function(){ // Todo:: middleware is already written
-Route::group([], function(){
+Route::group(['middleware' => 'lucent.auth'], function(){
     Route::post('/register-exception', [ExceptionController::class, 'registerException']);
 });
 

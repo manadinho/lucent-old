@@ -29,23 +29,43 @@
                                 <x-bladewind.tag label="{{ $team->projects_count }}" color="gray" />
 
                             </td>
-                            <td>
-                                @if(canDo($team->id, auth()->id(), 'can_delete_team'))
-                                    <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center px-2 py-1 ">
-                                        <x-bladewind.icon name="trash" />
-                                    </a>
+                            <td class="px-4 py-2 text-right">
+                                    <div class="relative inline-flex group">
+                                        <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
+                                            <x-bladewind.icon name="users" />
+                                        </a>
+                                        <div class="bg-gray-800 text-white p-2 rounded-lg absolute top-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {{ __('Members')}}
+                                        </div>
+                                    </div>
+                                    <div class="relative inline-flex group">
+                                        <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
+                                            <x-bladewind.icon name="rectangle-stack" />
+                                        </a>
+                                        <div class="bg-gray-800 text-white p-2 rounded-lg absolute top-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {{ __('Projects')}}
+                                        </div>
+                                    </div>
+                                    @if(canDo($team->id, auth()->id(), 'can_edit_team'))
+                                        <div class="relative inline-flex group">
+                                            <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center px-2 py-1 ">
+                                                <x-bladewind.icon name="pencil-square" />
+                                            </a>
+                                            <div class="bg-gray-800 text-white p-2 rounded-lg absolute top-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {{ __('Edit')}}
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if(canDo($team->id, auth()->id(), 'can_delete_team'))
+                                    <div class="relative inline-flex group">
+                                        <a onclick="confirmBefore(event, this)" href="{{ route('teams.delete', $team->id) }}" class="inline-flex float-right items-center px-2 py-1 ">
+                                            <x-bladewind.icon name="trash" />
+                                        </a>
+                                        <div class="bg-gray-800 text-white p-2 rounded-lg absolute top-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {{ __('Delete')}}
+                                        </div>
+                                    </div>
                                 @endif
-                                @if(canDo($team->id, auth()->id(), 'can_edit_team'))
-                                    <a @click="openEditModal('{{ $team }}')" href="#" class="inline-flex mr-2 float-right items-center px-2 py-1 ">
-                                        <x-bladewind.icon name="pencil-square" />
-                                    </a>
-                                @endif
-                                <a href="{{ route('teams.members',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
-                                    <x-bladewind.icon name="users" />
-                                </a>
-                                <a href="{{ route('teams.projects',$team->id) }}" class="inline-flex float-right mr-2 items-center px-2 py-1">
-                                <x-bladewind.icon name="rectangle-stack" />
-                                </a>
                             </td>
                         </tr>
                     @empty

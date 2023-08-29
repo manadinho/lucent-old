@@ -67,7 +67,7 @@ class ExceptionController extends Controller
     {
         $this->stack_trace = json_decode(request()->stack_trace);
 
-        $this->request = request()->request;
+        $this->request = request()->request_detail;
 
         $this->user = request()->user;
         
@@ -108,7 +108,7 @@ class ExceptionController extends Controller
             'code' => $this->stack_trace->code,
             'file' => $this->stack_trace->file,
             'line' => $this->stack_trace->line,
-            'project_id' => 1,
+            'project_id' => request()->project_id,
         ];
     }
 
@@ -125,7 +125,7 @@ class ExceptionController extends Controller
             'code' => $this->stack_trace->code,
             'file' => $this->stack_trace->file,
             'line' => $this->stack_trace->line,
-            'project_id' => 1,
+            'project_id' => request()->project_id,
             'occurrence_times' => $this->currentTime,
             'severity' => 'Error',
         ];

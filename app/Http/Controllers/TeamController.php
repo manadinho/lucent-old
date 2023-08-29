@@ -126,6 +126,8 @@ class TeamController extends Controller
      */
     public function members(Team $team): View
     {
+        $team->load('users');
+
         $this->user = auth()->user();
 
         return view('team.members',[
@@ -143,6 +145,10 @@ class TeamController extends Controller
      */
     public function projects(Team $team): View 
     {
+        $team->load(['projects' => function($q){
+            return $q->withCount('exceptions');
+        }]);
+
         $this->user = auth()->user();
         
        return view('team.projects',[

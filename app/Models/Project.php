@@ -27,4 +27,9 @@ class Project extends Model
     {
         return Str::random(32);
     }
+
+    public function exceptions() 
+    {
+        return $this->hasMany(Exception::class);
+    }
 }
