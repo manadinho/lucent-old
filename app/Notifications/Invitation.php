@@ -53,7 +53,7 @@ class Invitation extends Notification
      */
     private function generateUrl(): string 
     {
-        return $this->isNewUser ? url(config('app.url').'/register?token='.$this->token) : url(config('app.url').'/teams/info/'.$this->team->id);
+        return $this->isNewUser ? url(config('app.url').'/register?token='.$this->token) : url(config('app.url').'/teams/'.$this->team->id.'/members');
     }
 
     /**
