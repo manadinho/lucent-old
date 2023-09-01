@@ -1,6 +1,9 @@
 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
     <x-bladewind.table>
         <x-slot name="header">
+            <th>
+                {{ __('Team')}}
+            </th>
             <th>{{__('User')}}</th>
             <th>{{__('Role')}}</th>
             <th></th>
@@ -8,8 +11,11 @@
             @forelse($members as $member)
                 <tr>
                     <td>
-                    <x-bladewind.list-item>
-                        <x-bladewind.avatar image="{{ asset('images/avatar.jpg') }}" size="small" />
+                        <p class="text-sm font-medium text-slate-900">{{ $team->name }}</p>
+                    </td>
+                    <td>
+                        <x-bladewind.list-item >
+                            <x-bladewind.avatar image="{{ asset('images/avatar.jpg') }}" size="small" />
                             <div class="ml-3">
                                 <div class="text-sm font-medium text-slate-900">
                                     {{$member->name ?? 'N/A'}} {{ $member->name ? '' : '(User Not Joined Yet)' }}

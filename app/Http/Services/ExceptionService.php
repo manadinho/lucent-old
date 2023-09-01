@@ -53,7 +53,7 @@ class ExceptionService
 
         $this->exception->occurrence_count = $this->exception->occurrence_count + $count;
 
-        $this->exception->occurrence_times = $this->exception->occurrence_times.','.$currentTime;
+        $this->exception->occurrence_times = implode(',', $this->exception->occurrence_times).','.$currentTime;
 
         return $this;
     }

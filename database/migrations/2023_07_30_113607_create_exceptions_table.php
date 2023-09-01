@@ -16,7 +16,7 @@ return new class extends Migration
             // $table->foreignId('project_id')->references('id')->on('projects')->onDelete('cascade'); // todo::will uncomment when we will creae projects table
             $table->integer('project_id'); // we will remove this line when project functionality will implemtented
             $table->string('name');
-            $table->string('message');
+            $table->text('message');
             $table->string('code');
             $table->string('file');
             $table->string('line');

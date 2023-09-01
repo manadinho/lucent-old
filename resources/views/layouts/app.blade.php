@@ -5,8 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Lucent') }}</title>
 
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -25,6 +26,23 @@
             border-radius: 50%;
             padding: 5px 12px;
             top: 18%;
+        }
+        .filter-btn{
+            background: #e5e7eb;
+            color: gray;
+        }
+        .active-filter-btn {
+            background-color: gray !important;
+            color: #fff !important;
+            cursor: pointer;
+        }
+        .active-trace {
+            background: #FF241F !important;
+        }
+
+        .active-trace p {
+            color: #fffffe !important;
+
         }
     </style>
     <body class="font-sans antialiased">

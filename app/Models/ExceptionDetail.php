@@ -10,4 +10,15 @@ class ExceptionDetail extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function getAppAttribute($value) 
+    {
+        return json_decode($value);
+    }
+
+    public function getUserAttribute($value) 
+    {
+        return json_decode($value);
+    }
+
 }

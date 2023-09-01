@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\ExceptionService;
+use Exception;
 
 /**
  * Class ExceptionController
@@ -38,21 +39,23 @@ class ExceptionController extends Controller
      */
     public function registerException()
     {
-        $this->setter();
+        try {
+            $this->setter();
 
-        [$isExist, $exception] = $this->updateOrCreateException();
+            [$isExist, $exception] = $this->updateOrCreateException();
 
-        $this->service->set($exception);
+            $this->service->set($exception);
 
-        $this->service->notify();
+            $this->service->notify();
 
-        if (!$isExist) 
-        {
-            $this->service->createDetail($this->stack_trace->trace, $this->stack_trace->code_snippet, $this->request, $this->user, $this->app);
-        }
-
-
-        return 'success';
+            if (!$isExist) 
+            {
+                $this->service->createDetail($this->stack_trace->trace, $this->stack_trace->code_snippet, $this->request, $this->user, $this->app);
+            }
+            return 'success';
+        } catch(Exception $e) {
+            fast($e);
+        }   
     }
 
     /**

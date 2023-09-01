@@ -32,4 +32,9 @@ class Project extends Model
     {
         return $this->hasMany(Exception::class);
     }
+
+    public function resolvedExceptions() 
+    {
+        return $this->hasMany(Exception::class)->where('is_resolved', 1);
+    }
 }

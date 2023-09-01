@@ -18,6 +18,14 @@
                 </td>
                 <td class="px-4 py-2 text-right">
                     <div class="relative inline-flex group">
+                        <a href="{{ route('projects.exceptions.index', $project->id) }}" class="inline-flex mr-2 float-right items-center">
+                            <x-bladewind.icon name="bug-ant" />
+                        </a>
+                        <div class="bg-gray-800 text-white p-2 rounded-lg absolute top-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {{ __('Errors')}}
+                        </div>
+                    </div>
+                    <div class="relative inline-flex group">
                         <a href="{{ route('projects.configurations', $project->id) }}" class="inline-flex mr-2 float-right items-center">
                             <x-bladewind.icon name="cog" />
                         </a>

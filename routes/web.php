@@ -1,21 +1,21 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ExceptionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectExceptionController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -39,6 +39,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/{project}', [ProjectController::class, 'delete'])->name('delete');
         Route::get('/configurations/{project}', [ProjectController::class, 'configurations'])->name('configurations');
         Route::get('/key-generate/{project}', [ProjectController::class, 'keyGenerate'])->name('key.generate');
+
+        Route::group(['prefix' => 'exceptions', 'as' => 'exceptions.'], function(){
+            Route::get('/{project}', [ProjectExceptionController::class, 'index'])->name('index');
+            Route::get('/fetch/{project}/{filter}', [ProjectExceptionController::class, 'fetch'])->name('fetch');
+            Route::get('/fetch-count/{project}/{filter}', [ProjectExceptionController::class, 'count'])->name('fetch-count');
+            Route::get('/fetch-chart-data/{project}/{filter}', [ProjectExceptionController::class, 'getMainChartData'])->name('fetch-main-chart-data');
+            Route::get('/{project}/detail/{id}', [ProjectExceptionController::class, 'getOne'])->name('get-one');
+            Route::post('/delete', [ProjectExceptionController::class, 'delete'])->name('delete');
+            Route::post('/snooze', [ProjectExceptionController::class, 'markSnoozed'])->name('snooze');
+            Route::post('/resolve', [ProjectExceptionController::class, 'markResolved'])->name('resolve');
+        });
     });
 });
 
