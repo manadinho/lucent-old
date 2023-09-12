@@ -44,6 +44,9 @@
             color: #fffffe !important;
 
         }
+        .text-ellipsis{
+            text-overflow: ellipsis
+        }
     </style>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
