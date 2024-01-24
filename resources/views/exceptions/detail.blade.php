@@ -45,7 +45,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="alpine()">
             <div class="p-2 sm:p-4 bg-gray-50 shadow sm:rounded-lg">
-                <div class="flex items-center content-center">
+                <div class="flex items-center content-center p-5 bg-red-50 rounded-lg">
                     <button class=" back-button py-6 px-4 rounded" onclick="history.back()">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
@@ -56,7 +56,7 @@
                         <label class=" font-bold text-2xlrelative text-[10px] uppercase px-[12px] leading-8 tracking-widest whitespace-nowrap inline-block rounded-md mb-3 bg-gray-200 text-gray-500 " style="font-size: 15px;">
                         {{ $log->name }}
                         </label>
-                        <p class="tracking-wider text-2xl text-gray-800/90 mb-1 label font-bold">{{ $log->message }}</p>
+                        <p class="tracking-wider text-1xl text-gray-800/90 mb-1 label font-bold">{{ $log->message }}</p>
                     </div>
                     <div>
                         <span class="flex">

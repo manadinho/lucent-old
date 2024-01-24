@@ -1,9 +1,3 @@
-<script>
-    
-</script>
-
-
-
 @forelse($exceptions as $exception)
 <a href="{{ route('projects.exceptions.get-one', [$project->id, $exception->id]) }}">
     <div class="mt-5 bg-gray-50 shadow sm:rounded-lg border log-card">
@@ -21,18 +15,11 @@
                 </div>
             </div>
             <span aria-hidden="true" class="inline-block w-1 bg-[#cbd5e1]"></span>
-            <div class="ml-4 p-2 w-full">
+            <div class="ml-4 p-2 w-full" style="overflow: hidden;">
                 <h2 class=" tracking-wider text-2xl text-gray-900/90 mb-1 label"><b>{{ $exception->name }}</b></h2>
-                <h1 class="tracking-wider text-2xl text-gray-900/90 mb-1 label">{{ $exception->message }}</h1>
-                <p class=" tracking-wider text-sm text-gray-500/90 mb-1 label">{{ $exception->file }}</p>
-                <p class=" tracking-wider text-sm text-gray-500/90 mb-1 label">
-                    Line# {{ $exception->line }}
-                </p>
-                <p class=" tracking-wider text-sm text-gray-500/90 mb-1 label">
-                    Code {{ $exception->code ?? 'N/A' }}
-                </p>
+                <h1 class="tracking-wider text-sm text-gray-900/90 mb-1 label">{{ $exception->message }}</h1>
                 <div class="mt-5">
-                    <x-bladewind.button type="secondary" size="tiny" id="delete-btn-{{ $exception->id }}" @click.prevent="deleteException('{{ $exception->id }}')" class="ml-3" >
+                    <x-bladewind.button type="secondary" size="tiny" id="delete-btn-{{ $exception->id }}" @click.prevent="deleteException('{{ $exception->id }}')" >
                         <span class="tooltiptext">Delete</span>
                         <x-bladewind.icon name="trash" />
                     </x-bladewind.button>
@@ -46,8 +33,8 @@
                     </x-bladewind.button>
                 </div>
             </div>
-            <div class="p-1" style="width: 300px margin-left:auto">
-                <canvas id="chart-{{$exception->id}}"></canvas>
+            <div class="p-1" style=" margin-left:auto">
+                <canvas id="chart-{{$exception->id}}" style="background: #e4e7eb; width: 300px; border-radius: 5px; padding: 5px; margin-right: 5px; margin-bottom: 4px;"></canvas>
             </div>
         </div>
 
@@ -136,11 +123,13 @@
     }
 </script>
 @empty
-<div class=" mt-4 flex justify-center">
-    <img src="{{ asset('images/no-data-found.svg') }}" width="400px">
-</div>
+<div style="height: 350px;">
+    <div class=" mt-4 flex justify-center">
+        <img src="{{ asset('images/no-data-found.svg') }}" width="400px">
+    </div>
 
-<div class=" flex justify-center">
-    <p class="no-data-found-text">No exception found!</p>
+    <div class=" flex justify-center">
+        <p class="no-data-found-text">No exception found!</p>
+    </div>
 </div>
 @endforelse

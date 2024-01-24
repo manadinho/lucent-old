@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Exception;
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use \Illuminate\Contracts\View\View;
 
 class ProjectExceptionController extends Controller
 {
-    public function index(Project $project) 
+    /**
+     * Display the index page for exceptions.
+     *
+     * @param Project $project The project object.
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(Project $project): View 
     {
         return view('exceptions.index', [
             'project' => $project
@@ -21,13 +27,14 @@ class ProjectExceptionController extends Controller
     {
         $query = $this->getFilterQuery(request());
         
-        $logs = $query->orderBy('updated_at', 'DESC')->get();
+        // todo:: add pagination
+        $exceptions = $query->orderBy('updated_at', 'DESC')->get();
         
-        $logs = $this->addChartData($logs);
+        $exceptions = $this->addChartData($exceptions);
 
         $project = Project::find(request()->project);
 
-        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $logs]);
+        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $exceptions]);
     }
 
     public function count()

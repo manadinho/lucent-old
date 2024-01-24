@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('css/simple-notify.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
         <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
         <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
 
@@ -55,6 +56,9 @@
             padding: 5px 10px;
             color: #fffffe;
             border-radius: 4px;
+            font-weight: 900;
+        }
+        .no-data-found-text{
             font-weight: 900;
         }
     </style>

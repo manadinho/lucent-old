@@ -38,23 +38,25 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="alpine()" x-init="getExceptions(); getExceptionsCount(); getExceptionsMainChartData();">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class=" flex justify-end items-center gap-2">
-                    <span class="filter-btn rounded px-2 py-1 filter-section"> {{ __('Total') }} <span x-text="exceptionCount"></span> </span>
-                    <span class=" filter-section p-2 rounded flex gap-2">
-                        <span @click="doFilter()" :class="filter == '12h' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">12h</span>
-                        <span @click="doFilter('day')" :class="filter == 'day' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Day</span>
-                        <span @click="doFilter('week')" :class="filter == 'week' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Week</span>
-                        <span @click="doFilter('all')" :class="filter == 'all' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">All</span>
-                        <span @click="doFilter('snoozed')" :class="filter == 'snoozed' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Snoozed</span>
-                        <span @click="doFilter('resolved')" :class="filter == 'resolved' ? 'active-filter-btn' : 'filter-btn'" class="rounded  px-2 py-1 filter-section cursor-pointer">Resolved</span>
-                    </span>
-                </div>
-                <div class=" flex justify-center mt-2">
-                    <div>
-                        <canvas id="main-chart" style="height:40vh; width:80vw"></canvas>
+            <div class="shadow sm:rounded-lg">
+                <div class="p-5">
+                    <div class=" flex justify-end items-center gap-2">
+                        <span class="filter-btn rounded px-2 py-1 filter-section"> {{ __('Total') }} <span x-text="exceptionCount"></span> </span>
+                        <span class=" filter-section p-2 rounded flex gap-2">
+                            <span @click="doFilter()" :class="filter == '12h' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">12h</span>
+                            <span @click="doFilter('day')" :class="filter == 'day' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Day</span>
+                            <span @click="doFilter('week')" :class="filter == 'week' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Week</span>
+                            <span @click="doFilter('all')" :class="filter == 'all' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">All</span>
+                            <span @click="doFilter('snoozed')" :class="filter == 'snoozed' ? 'active-filter-btn' : 'filter-btn'" class="rounded px-2 py-1 filter-section cursor-pointer">Snoozed</span>
+                            <span @click="doFilter('resolved')" :class="filter == 'resolved' ? 'active-filter-btn' : 'filter-btn'" class="rounded  px-2 py-1 filter-section cursor-pointer">Resolved</span>
+                        </span>
                     </div>
-                </div>
+                    <div class=" flex justify-center mt-2">
+                        <div>
+                            <canvas id="main-chart" style="height:40vh; width:75vw"></canvas>
+                        </div>
+                    </div>
+                </div>    
 
                 <template x-if="loading">
                     <section class="m-10">
@@ -220,6 +222,7 @@
                     alert('Value is not correct');
                     return true;
                 }
+                
                 this.filter = value;
                 localStorage.setItem('filter', this.filter)
                 this.getExceptionsCount(this.filter)
@@ -343,9 +346,6 @@
 
             ]
         };
-
-
-
 
         let options = {
             responsive: true,

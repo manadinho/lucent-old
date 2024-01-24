@@ -14,15 +14,10 @@ use Exception;
 class ExceptionController extends Controller
 {
     private $stack_trace = null;
-
     private $currentTime = null;
-
     private $service = null;
-
     private $request = null;
-
     private $user = null;
-
     private $app = null;
 
     public function __construct(ExceptionService $exceptionService)
