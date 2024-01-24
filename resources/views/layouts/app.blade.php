@@ -52,9 +52,8 @@
             box-shadow: 3px 3px 14px -2px gray;
         }
         .card-title{
-            background-color: #1f2937;
             padding: 5px 10px;
-            color: #fffffe;
+            color: #1f2937;
             border-radius: 4px;
             font-weight: 900;
         }

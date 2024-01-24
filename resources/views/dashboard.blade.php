@@ -13,8 +13,8 @@
                             <div class="project-card p-4 bg-white   rounded-lg shadow-2xl shadow-gray-500/20 transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                                 <div>
                                     <h2 class="card-title whitespace-nowrap overflow-hidden text-ellipsis tracking-wider text-2xl text-gray-900/90 mb-1 label">{{ $project->name }} <br><small class="text-gray-400">({{ $project->environment}})</small></h2><br>
-                                    <x-bladewind.tag label="Total Exceptions: {{ $project->exceptions_count }}" color="red" />
-                                    <x-bladewind.tag label="Resolved Exceptions: {{ $project->resolved_exceptions_count }}" color="green" />
+                                    <x-bladewind.tag label="Total Exceptions: {{ $project->exceptions_count }}" color="gray" />
+                                    <x-bladewind.tag label="Resolved Exceptions: {{ $project->resolved_exceptions_count }}" color="gray" />
                                     <hr class="border-t border-gray-300 mb-4">
                                     <a href="{{ route('projects.exceptions.index', $project->id) }}" class="inline-flex mr-2 float-right items-center">
                                         <x-bladewind.button type="secondary" size="tiny" class="ml-3 mt-1" >
