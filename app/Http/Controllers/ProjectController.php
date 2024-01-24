@@ -28,6 +28,10 @@ class ProjectController extends Controller
     {
         $this->user = auth()->user();
 
+        if(! canDo($request->team_id, $this->user->id, 'can_create_project')){
+            return back()->with(sendToast('You do not have permission.', ERROR));
+        }
+
         $message = $request->id ? 'Project updated.' : 'Project created.';
 
         Project::updateOrCreate(['id' => $request->id], [
@@ -76,6 +80,10 @@ class ProjectController extends Controller
      */
     public function delete(Project $project): RedirectResponse
     {
+        if(! canDo($project->team_id, auth()->id(), 'can_delete_project')){
+            return back()->with(sendToast('You do not have permission.', ERROR));
+        }
+
         $project->delete();
 
         return back()->with(sendToast('Project deleted.'));

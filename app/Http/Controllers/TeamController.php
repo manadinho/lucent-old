@@ -46,6 +46,12 @@ class TeamController extends Controller
     {
         $this->user = auth()->user();
 
+        if(request()->id) {
+            if(! canDo(request()->id, $this->user->id, 'can_edit_team')){
+                return back()->with(sendToast('You do not have permission.', ERROR));
+            }
+        }
+
         request()->validate([
             'name' => 'required'
         ]);
@@ -108,6 +114,10 @@ class TeamController extends Controller
     public function delete(Team $team) 
     {
         $this->user = auth()->user();
+
+        if(! canDo(request()->id, $this->user->id, 'can_delete_team')){
+            return back()->with(sendToast('You do not have permission.', ERROR));
+        }
 
         if ($team->isUserOwner($this->user->id)) {
             $team->delete();

@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="mb-4 text-sm text-gray-600 max-w-7xl mx-auto sm:px-6 lg:px-4">
-        <nav class="flex bg-black-50 text-black-700 py-3 px-5 rounded-lg mb-4" aria-label="Breadcrumb">
+        <nav class="flex bg-gray-800 text-white py-3 px-5 rounded-lg mt-4" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('dashboard') }}" class="text-black-700 hover:text-black-900 inline-flex items-center">

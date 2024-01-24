@@ -47,6 +47,16 @@
         .text-ellipsis{
             text-overflow: ellipsis
         }
+        .project-card{
+            box-shadow: 3px 3px 14px -2px gray;
+        }
+        .card-title{
+            background-color: #1f2937;
+            padding: 5px 10px;
+            color: #fffffe;
+            border-radius: 4px;
+            font-weight: 900;
+        }
     </style>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

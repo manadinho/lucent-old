@@ -16,11 +16,11 @@ class MemberController extends Controller
     
     public function add(MemberRequest $req)
     {
-        $this->teamId = $req->teamId;
-
-        if(!isTeamOwner($this->teamId)) {
-            return back()->with(sendToast('You cannot add member in current Team', ERROR));
+        if(! canDo($req->teamId, auth()->id(), 'can_add_member')){
+            return back()->with(sendToast('You do not have permission.', ERROR));
         }
+
+        $this->teamId = $req->teamId;
 
         $user = User::where('email', $req->email)->with('teams')->first();
 
@@ -75,6 +75,10 @@ class MemberController extends Controller
     public function remove($user_id, $team_id)
     {  
         $authId = auth()->id();
+
+        if(! canDo($team_id, $authId, 'can_remove_member')){
+            return back()->with(sendToast('You do not have permission.', ERROR));
+        }
 
         $member =  DB::table('team_user')
                     ->where('user_id',$authId)

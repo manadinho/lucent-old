@@ -2,7 +2,7 @@
 <div  x-show="open" @click.away="open = false" class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur">
     <!-- Modal content with custom width -->
     <div class="bg-white p-8 rounded shadow-lg w-96"> <!-- Adjust the width here -->
-    <h2 class="text-xl font-bold mb-4">Add Member</h2>
+    <h2 class="card-title text-xl font-bold mb-4">Add Member</h2>
     
     <form method="POST" action="{{ route('members.add') }}">
         @csrf
