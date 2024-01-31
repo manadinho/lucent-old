@@ -60,14 +60,22 @@
                     </div>
                     <div>
                         <span class="flex">
-                            <img src="{{ asset('images/php-icon.svg') }}" alt="">
-                            <span class="ml-1 text-sm">{{ $log->detail->app->php_version}}</span>
-                            <img src="{{ asset('images/laravel.svg') }}" class="ml-5" alt="" width="15">
-                            <span class="ml-1 text-sm">{{ $log->detail->app->laravel_version}}</span>
-                            <img src="{{ asset('images/settings.svg') }}" class="ml-5" alt="" width="15">
-                            <span class="ml-1 text-sm">{{ $log->detail->app->app_environment}}</span>
-                            <img src="{{ asset('images/globe.svg') }}" class="ml-5" alt="" width="15">
-                            <span class="ml-1 text-sm">{{ $log->detail->app->laravel_locale }}</span>
+                            @if(optional($log->detail->app)->php_version)
+                                <img src="{{ asset('images/php-icon.svg') }}" alt="">
+                                <span class="ml-1 text-sm">{{ $log->detail->app->php_version }}</span>
+                            @endif
+                            @if(optional($log->detail->app)->laravel_version)
+                                <img src="{{ asset('images/laravel.svg') }}" class="ml-5" alt="" width="15">
+                                <span class="ml-1 text-sm">{{ $log->detail->app->laravel_version }}</span>
+                            @endif
+                            @if(optional($log->detail->app)->app_environment)
+                                <img src="{{ asset('images/settings.svg') }}" class="ml-5" alt="" width="15">
+                                <span class="ml-1 text-sm">{{ $log->detail->app->app_environment }}</span>
+                            @endif
+                            @if(optional($log->detail->app)->laravel_locale)
+                                <img src="{{ asset('images/globe.svg') }}" class="ml-5" alt="" width="15">
+                                <span class="ml-1 text-sm">{{ $log->detail->app->laravel_locale }}</span>
+                            @endif
                         </span>
                         <span class="flex">
                             
@@ -111,6 +119,100 @@
             </div>
 
         </div>
+        @if($log->detail->request && !empty(get_object_vars($log->detail->request)))
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 mt-5">
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <div class="font-bold text-xl mb-2">REQUEST</div>
+                    <div class="text-blue-600 mb-4">{{ optional($log->detail->request)->url }} <span class="text-green-500">{{ optional($log->detail->request)->method }}</span></div>
+                    @if(optional($log->detail->request)->headers)
+                        <div class="group relative font-mono bg-gray-100 p-4 rounded mb-4" style="overflow-x: auto;">
+                            <button onclick="copyToClipboard(this)" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-white p-1 rounded-full shadow">
+                                <x-bladewind.icon name="document-duplicate" />
+                            </button>
+                            <code class="text-sm">
+                                curl "{{ optional($log->detail->request)->url }}" \<br>
+                                -X {{ optional($log->detail->request)->method }} \<br>
+                                @forelse(json_decode(json_encode(json_decode(optional($log->detail->request)->headers)), true) as $key => $headerArr)
+                                    -H "{{ $key }}: {{ $headerArr[0] }}" \<br>
+                                @empty
+                                @endforelse
+                                @forelse(optional($log->detail->request)->body as $key => $value)
+                                    -F "{{ $key }}={{ $value }}"
+                                @empty
+                                @endforelse
+                            </code>
+                        </div>
+                    @endif
+                    
+                    @if(optional($log->detail->request)->headers)
+                        <div class="mb-4">
+                            <div class="font-bold text-lg mb-2 text-red-500">Browser</div>
+                            <div class="group relative text-gray-700 font-mono bg-gray-100 p-4 rounded mb-4" style="overflow-x:auto">
+                                <button onclick="copyToClipboard(this)" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-white p-1 rounded-full shadow">
+                                    <x-bladewind.icon name="document-duplicate" />
+                                </button>
+                                <code class="text-sm">
+                                    {{ json_decode(json_encode(json_decode(optional($log->detail->request)->headers)), true)['user-agent'][0] }}
+                                </code>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if(optional($log->detail->request)->headers)
+                        <div class="mb-4">
+                            <div class="font-bold text-lg mb-2 text-red-500">Headers</div>
+                            @forelse(json_decode(json_encode(json_decode(optional($log->detail->request)->headers)), true) as $key => $headerArr)
+                                <div class="w-full flex">
+                                    <div class="text-gray-700 flex items-center" style="width:20%">
+                                        {{$key}}
+                                    </div>
+                                    <div class="group relative text-gray-700 font-mono bg-gray-100 p-4 rounded mb-4" style="width:80%; overflow-x:auto">
+                                        <button onclick="copyToClipboard(this)" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-white p-1 rounded-full shadow">
+                                            <x-bladewind.icon name="document-duplicate" />
+                                        </button>
+                                        <code class="text-sm">
+                                            {{ $headerArr[0] }}
+                                        </code>
+                                    </div>
+                                </div>
+                            @empty
+                            @endforelse
+                        </div>
+                    @endif
+
+                    @if(optional($log->detail->request)->body)
+                        <div class="mb-4">
+                            <div class="font-bold text-lg mb-2 text-red-500">Body</div>
+                            <div class="group relative text-gray-700 font-mono bg-gray-100 p-4 rounded mb-4" style="overflow-x:auto">
+                                <button onclick="copyToClipboard(this)" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-white p-1 rounded-full shadow">
+                                    <x-bladewind.icon name="document-duplicate" />
+                                </button>
+                                <pre id="request-body" class="whitespace-pre-wrap overflow-x-auto text-xs">
+                                    
+                                </pre>
+                            </div>
+                        </div>
+                    @endif    
+                </div>
+            </div>
+        @endif
+
+        @if($log->detail->user && !empty(get_object_vars($log->detail->user)))
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 mt-5">
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <div class="font-bold text-xl mb-2">User</div>
+                    <div class="group relative text-gray-700 font-mono bg-gray-100 p-4 rounded mb-4" style="overflow-x:auto">
+                        <button onclick="copyToClipboard(this)" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-white p-1 rounded-full shadow">
+                            <x-bladewind.icon name="document-duplicate" />
+                        </button>
+                        <pre id="request-user" class="whitespace-pre-wrap overflow-x-auto text-xs">
+                            
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+        @endif
     </div>
     @include('exceptions.partials.detail-partial')
 </x-app-layout>
@@ -122,5 +224,29 @@
         return {
         }
 
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const jsonRequestBody = @json(optional($log->detail->request)->body) ? @json(optional($log->detail->request)->body):{} ;
+        document.getElementById('request-body').textContent = JSON.stringify(jsonRequestBody, null, 2);
+
+        const jsonRequestUser = @json($log->detail->user) ? @json($log->detail->user):{} ;
+        document.getElementById('request-user').textContent = JSON.stringify(jsonRequestUser, null, 2);
+    });
+    function copyToClipboard(element) {
+        var text = element.nextElementSibling.textContent;
+        const originalButtonHtml = element.innerHTML;
+        element.disabled = true;
+
+        navigator.clipboard.writeText(text.trim()).then(function() {
+            element.innerHTML = '<span class="text-sm text-green-500">Copied</span>';
+            setTimeout(function() {
+                element.innerHTML = originalButtonHtml;
+                element.disabled = false;
+            }, 3000);
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
     }
 </script>

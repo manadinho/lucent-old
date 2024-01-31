@@ -65,11 +65,11 @@ class ExceptionController extends Controller
     {
         $this->stack_trace = json_decode(request()->stack_trace);
 
-        $this->request = request()->request_detail;
+        $this->request = request()->request_detail ?? "{}";
 
-        $this->user = request()->user;
+        $this->user = request()->user ?? "{}";
         
-        $this->app = request()->app;
+        $this->app = request()->app ?? "{}";
     }
 
     /**
