@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectConfig;
+use App\Traits\ProjectTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -16,6 +17,8 @@ use Illuminate\View\View;
  */
 class ProjectController extends Controller
 {
+    use ProjectTrait;
+    
     public $user;
 
     /**
@@ -42,34 +45,6 @@ class ProjectController extends Controller
         ]);
 
         return back()->with(sendToast($message));
-    }
-
-    /**
-     * Generate a unique name by appending a number to the input name if it already exists in the database.
-     *
-     * @param string $name The original name to check for uniqueness.
-     * @return string The unique name.
-     */
-    private function getUniqueName(string $name): string
-    {
-        // TO CHECK IF UPDATE REQUEST AND USER IS NOT UPDATIONG NAME
-        if (request()->id) {
-            if (Project::find(request()->id)->name ===  $name) {
-                return $name;
-            }
-        }
-
-        $originalName = $name;
-
-        $counter = 1;
-
-        while (Project::where(['name' => $name, 'user_id' => $this->user->id, 'team_id' => request()->team_id])->exists()) {
-            $name = $originalName . '-' . $counter;
-
-            $counter++;
-        }
-
-        return $name;
     }
 
     /**

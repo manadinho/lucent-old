@@ -236,7 +236,12 @@
     });
     function copyToClipboard(element) {
         if (!navigator.clipboard) {
-            alert('Copying to clipboard failed. Clipboard API is not available in this browser or context.');
+            new Notify ({
+                title: "Error",
+                text: "Copying to clipboard failed. Clipboard API is not available in this browser or context.",
+                status: "error",
+                autoclose: true,
+            })
             return;
         }
         debugger;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
+use App\Traits\TeamTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -16,6 +17,8 @@ use Illuminate\View\View;
  */
 class TeamController extends Controller
 {
+    use TeamTrait;
+
     private $user;
 
     /**
@@ -76,34 +79,6 @@ class TeamController extends Controller
     }
 
     /**
-     * Generate a unique name by appending a number to the input name if it already exists in the database.
-     *
-     * @param string $name The original name to check for uniqueness.
-     * @return string The unique name.
-     */
-    private function getUniqueName(string $name): string
-    {
-        // TO CHECK IF UPDATE REQUEST AND USER IS NOT UPDATIONG NAME
-        if (request()->id) {
-            if(Team::find(request()->id)->name ===  $name) {
-                return $name;
-            }
-        }
-
-        $originalName = $name;
-
-        $counter = 1;
-
-        while (Team::where(['name' => $name, 'user_id' => $this->user->id])->exists()) {
-            $name = $originalName . '-' . $counter;
-
-            $counter++;
-        }
-
-        return $name;
-    }
-
-    /**
      * Delete a team.
      *
      * This function deletes the provided team after checking the current user's role in the team.
@@ -115,7 +90,7 @@ class TeamController extends Controller
     {
         $this->user = auth()->user();
 
-        if(! canDo(request()->id, $this->user->id, 'can_delete_team')){
+        if(! canDo($team->id, $this->user->id, 'can_delete_team')){
             return back()->with(sendToast('You do not have permission.', ERROR));
         }
 
