@@ -105,6 +105,6 @@
                 </td>
             </tr>
         </x-bladewind.table>
-        <button @click="who_can_do = false" class="mt-4 bg-gray-500 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
+        <button @click="who_can_do = false" class="mt-4 bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
     </div>
 </div>

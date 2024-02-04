@@ -110,6 +110,21 @@ return [
     */
 
     'faker_locale' => 'en_US',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | OpenAI API Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used for authenticating requests to the OpenAI API, enabling
+    | your application to interact with OpenAI's powerful AI models, including
+    | GPT-3. Store your API key in your .env file as OPENAI_API_KEY to keep it
+    | secure and not hard-coded within your application's version control.
+    | Utilize this configuration value when you need to access OpenAI services.
+    |
+    */
+    
+    'openai_api_key' => env('OPENAI_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------

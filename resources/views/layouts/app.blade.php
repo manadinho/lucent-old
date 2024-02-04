@@ -23,10 +23,10 @@
         .modal-cancel-btn{
             position: absolute;
             margin-right: 14px !important;
-            left: 36%;
+            right: 2%;
             border-radius: 50%;
             padding: 5px 12px;
-            top: 18%;
+            top: 1%;
         }
         .filter-btn{
             background: #e5e7eb;

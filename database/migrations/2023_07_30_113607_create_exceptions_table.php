@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('exceptions', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('project_id')->references('id')->on('projects')->onDelete('cascade'); // todo::will uncomment when we will creae projects table
-            $table->integer('project_id'); // we will remove this line when project functionality will implemtented
+            $table->integer('project_id'); 
             $table->string('name');
             $table->text('message');
+            $table->text('ai_solution')->nullable();
             $table->string('code');
             $table->string('file');
             $table->string('line');

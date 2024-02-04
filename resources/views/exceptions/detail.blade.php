@@ -235,6 +235,11 @@
         document.getElementById('request-user').textContent = JSON.stringify(jsonRequestUser, null, 2);
     });
     function copyToClipboard(element) {
+        if (!navigator.clipboard) {
+            alert('Copying to clipboard failed. Clipboard API is not available in this browser or context.');
+            return;
+        }
+        debugger;
         var text = element.nextElementSibling.textContent;
         const originalButtonHtml = element.innerHTML;
         element.disabled = true;

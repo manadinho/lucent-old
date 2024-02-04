@@ -38,7 +38,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="alpine()" x-init="getExceptions(); getExceptionsCount(); getExceptionsMainChartData();">
-            <div class="shadow sm:rounded-lg">
                 <div class="p-5">
                     <div class=" flex justify-end items-center gap-2">
                         <span class="filter-btn rounded px-2 py-1 filter-section"> {{ __('Total') }} <span x-text="exceptionCount"></span> </span>
@@ -53,7 +52,7 @@
                     </div>
                     <div class=" flex justify-center mt-2">
                         <div>
-                            <canvas id="main-chart" style="height:40vh; width:75vw"></canvas>
+                            <canvas id="main-chart" style="height:40vh; width:65vw"></canvas>
                         </div>
                     </div>
                 </div>    
@@ -70,7 +69,7 @@
                 <template x-if="!loading">
                     <section class="m-10 bg-re" id="exception-area"></section>
                 </template>
-            </div>
+            
 
         </div>
     </div>
@@ -109,8 +108,8 @@
                     fetch(`{{route('projects.exceptions.delete')}}`, {
                         method: 'post',
                         headers: {
-                            'Accept': 'app;lication/json',
-                            'Content-Type': 'app;lication/json'
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             id,
@@ -154,8 +153,8 @@
                     fetch(`{{route('projects.exceptions.snooze')}}`, {
                         method: 'post',
                         headers: {
-                            'Accept': 'app;lication/json',
-                            'Content-Type': 'app;lication/json'
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             id,
@@ -198,8 +197,8 @@
                     fetch(`{{route('projects.exceptions.resolve')}}`, {
                         method: 'post',
                         headers: {
-                            'Accept': 'app;lication/json',
-                            'Content-Type': 'app;lication/json'
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             id,
@@ -247,8 +246,8 @@
             getExceptionsCount() {
                 fetch(`{{url('/projects/exceptions/fetch-count')}}/${this.project_id}/${this.filter}`, {
                     headers: {
-                        'Accept': 'app;lication/json',
-                        'Content-Type': 'app;lication/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                 }).then(async (_res) => {
                     const res = await _res.json();
@@ -258,8 +257,8 @@
             getExceptionsMainChartData() {
                 fetch(`{{url('/projects/exceptions/fetch-chart-data')}}/${this.project_id}/${this.filter}`, {
                     headers: {
-                        'Accept': 'app;lication/json',
-                        'Content-Type': 'app;lication/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                 }).then(async (_res) => {
                     const res = await _res.json();
@@ -289,6 +288,61 @@
                 }
 
                 document.querySelector('#codeArea').innerHTML = codeSection
+            },
+            typeText(elementId, text) {
+                let i = 0;
+                const targetElement = document.getElementById(elementId);
+
+                function type() {
+                    if (i < text.length) {
+                        targetElement.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type); // Wait a bit before adding the next character
+                    }
+                }
+
+                type(); // Start the typing effect
+            },
+
+            generateAiSolution(id) {
+                document.querySelector(`#ai-btn-${id}`).textContent = 'Generating...';
+                document.querySelector(`#ai-btn-${id}`).disabled = true;
+                
+                fetch(`{{url('/projects/exceptions/generate-solution')}}/${id}`, {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                            id,
+                            _token: '{{ csrf_token() }}'
+                        })
+                }).then(async (_res) => {
+                    document.querySelector(`#ai-btn-${id}`).innerHTML = `
+                    <span class="tooltiptext" style="display:flex; justify-content:center; align-items:center">AI <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" viewBox="0 0 256 256"><path d="M197.58,129.06l-51.61-19-19-51.65a15.92,15.92,0,0,0-29.88,0L78.07,110l-51.65,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0l19-51.61,51.65-19a15.92,15.92,0,0,0,0-29.88ZM140.39,163a15.87,15.87,0,0,0-9.43,9.43l-19,51.46L93,172.39A15.87,15.87,0,0,0,83.61,163h0L32.15,144l51.46-19A15.87,15.87,0,0,0,93,115.61l19-51.46,19,51.46a15.87,15.87,0,0,0,9.43,9.43l51.46,19ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"></path></svg></span>
+                    `;
+                document.querySelector(`#ai-btn-${id}`).disabled = false;
+                    const res = await _res.json();
+                    if(res.success){
+                        const aisection = `
+                        <div class="bg-green-50 p-2 mt-1 rounded">
+                            <span class="flex items-center pr-3 pl-3.5 font-bold">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" viewBox="0 0 256 256"><path d="M197.58,129.06l-51.61-19-19-51.65a15.92,15.92,0,0,0-29.88,0L78.07,110l-51.65,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0l19-51.61,51.65-19a15.92,15.92,0,0,0,0-29.88ZM140.39,163a15.87,15.87,0,0,0-9.43,9.43l-19,51.46L93,172.39A15.87,15.87,0,0,0,83.61,163h0L32.15,144l51.46-19A15.87,15.87,0,0,0,93,115.61l19-51.46,19,51.46a15.87,15.87,0,0,0,9.43,9.43l51.46,19ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"></path></svg>
+                                <h5>AI Generated Solution</h5>
+                            </span>
+                            <p class="text-sm mt-2 pl-2" id="exception-ai-text-${id}">
+                            </p>
+                        </div>`;  
+                        document.querySelector(`#ai-solution-section-${id}`).innerHTML = aisection
+                        this.typeText(`exception-ai-text-${id}`, res.data);
+                    }
+                }).catch(err => {
+                    document.querySelector(`#ai-btn-${id}`).innerHTML = `
+                    <span class="tooltiptext" style="display:flex; justify-content:center; align-items:center">AI <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" viewBox="0 0 256 256"><path d="M197.58,129.06l-51.61-19-19-51.65a15.92,15.92,0,0,0-29.88,0L78.07,110l-51.65,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0l19-51.61,51.65-19a15.92,15.92,0,0,0,0-29.88ZM140.39,163a15.87,15.87,0,0,0-9.43,9.43l-19,51.46L93,172.39A15.87,15.87,0,0,0,83.61,163h0L32.15,144l51.46-19A15.87,15.87,0,0,0,93,115.61l19-51.46,19,51.46a15.87,15.87,0,0,0,9.43,9.43l51.46,19ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"></path></svg></span>
+                    `;
+                    document.querySelector(`#ai-btn-${id}`).disabled = false;
+                });
             }
         }
     }

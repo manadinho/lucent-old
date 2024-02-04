@@ -31,6 +31,6 @@
         </div>
         <input type="hidden" name='teamId' value={{$members[0]->pivot->team_id}} >
     </form>
-    <button @click="close()" class="mt-4 bg-gray-500 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
+    <button @click="close()" class="mt-4 bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded modal-cancel-btn">X</button>
     </div>
 </div>
