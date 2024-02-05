@@ -9,6 +9,8 @@ class ProjectConfig extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'values' => 'array'
     ];

@@ -21,7 +21,7 @@ class ProjectExceptionController extends Controller
     public function index(Project $project): View 
     {
         return view('exceptions.index', [
-            'project' => $project
+            'project' => $project,
         ]);
     }
 
@@ -36,7 +36,7 @@ class ProjectExceptionController extends Controller
 
         $project = Project::find(request()->project);
 
-        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $exceptions]);
+        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $exceptions, 'hasOpenaiKey' => $this->hasOpenaiKey($project)]);
     }
 
     public function count()
@@ -113,14 +113,16 @@ class ProjectExceptionController extends Controller
 
     public function generateSolution(Exception $exception) 
     {
-        if(!config('app.openai_api_key') || config('app.openai_api_key') == "") {
-            return response()->json(['success' => false, 'message' => 'OpenAI API key not found']);
-        }
-
         try{
+            $project = Project::with('config')->find($exception->project_id);
+            $openaiKey = $project->config->where('key', 'openai_key')->first()->values['key'];
+            if(!$openaiKey) {
+                return response()->json(['success' => false, 'message' => 'OpenAI API key not found']);
+            }
+
             $exception->load('detail');
             $prompt = $this->createPrompt($exception);
-            $response = $this->aiSolution($prompt);
+            $response = $this->aiSolution($prompt, $openaiKey);
             $this->addAiResToException($exception, $response);
             return response()->json(['success' => true, 'data' => $response['choices'][0]['text']]);
         } catch(\Exception $e){

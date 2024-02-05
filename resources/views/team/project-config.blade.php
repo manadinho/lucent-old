@@ -44,6 +44,7 @@
                     <x-slot name="headings">
 
                         <x-bladewind.tab-heading name="configurations" active="true" label="{{ __('Configurations')}}" />
+                        <x-bladewind.tab-heading name="openai_key" label="{{ __('Open AI Key')}}" />
                         <x-bladewind.tab-heading name="notifications" label="{{ __('Notifications')}}" />
                         <x-bladewind.tab-heading name="visitor_access" label="{{ __('Visitor Acess')}}" />
                         <x-bladewind.tab-heading name="github" label="{{ __('GitHub')}}" />
@@ -69,6 +70,25 @@
                                         @endif    
                                     </div>
                                 </div>
+                            </x-bladewind.card>
+                        </x-bladewind.tab-content>
+                    </x-bladewind.tab-body>
+
+                    <x-bladewind.tab-body>
+                        <x-bladewind.tab-content name="openai_key">
+                            <x-bladewind.card reduce_padding="true">
+                                <div class="flex items-center">
+                                    <div>
+                                        <x-bladewind.icon name="key" />
+                                        <b>{{ __('OPEN AI KEY')}}</b>
+                                    </div>
+                                    <div class="grow pl-4 pt-1">
+                                        <x-text-input class="block" type="text" id="openai_key_field"  required autofocus placeholder="KEY" value="{{ $configurations->where('key', 'openai_key')->first()->values['key'] ?? '' }}" style="width: 100%;" />
+                                    </div>
+                                </div>
+                                <x-primary-button @click.prevent="saveOpeaiKey()">
+                                    {{ __('Submit') }}
+                                </x-primary-button>
                             </x-bladewind.card>
                         </x-bladewind.tab-content>
                     </x-bladewind.tab-body>
@@ -141,7 +161,40 @@
                     autoclose: true,
                 })
 
-            }
+            },
+
+            saveOpeaiKey: function() {
+                const openaiKey = document.getElementById('openai_key_field').value;
+                    fetch('{{route("projects.store.openaikey")}}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id: '{{$project->id}}',
+                                key: openaiKey,
+                                _token: '{{ csrf_token() }}'
+                            }),
+                        }
+                    ).then(async (_res) => {
+                        const res = await _res.json();
+                        if(res.success) {
+                            new Notify ({
+                                title: "Success",
+                                text: "OpenAI key updated",
+                                status: "success",
+                                autoclose: true,
+                            })
+                        }
+                    }).catch((error) => {
+                        new Notify ({
+                            title: "Error",
+                            text: error.message,
+                            status: "error",
+                            autoclose: true,
+                        })
+                    });
+                }
         }
     }
 </script>

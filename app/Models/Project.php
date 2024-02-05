@@ -37,4 +37,10 @@ class Project extends Model
     {
         return $this->hasMany(Exception::class)->where('is_resolved', 1);
     }
+
+    public function config() 
+    {
+        return $this->hasMany(ProjectConfig::class);
+    }
+
 }

@@ -71,12 +71,10 @@ class ProjectController extends Controller
      * @return \Illuminate\Contracts\View\View The view containing the project configurations.
      */
     public function configurations(Project $project): View
-    {
-        $configurations = ProjectConfig::where('project_id', $project->id)->get();
-        
+    {   
         return view('team.project-config', [
             'project' => $project,
-            'configurations' => $configurations
+            'configurations' => $this->getAllConfigurations(['project_id' => $project->id])
         ]);
     }
 
@@ -88,12 +86,17 @@ class ProjectController extends Controller
      */
     public function keyGenerate(Project $project): RedirectResponse
     {
-        if(canDo($project->team_id, auth()->id(), 'can_generate_key')) {
-            ProjectConfig::where(['project_id' => $project->id, 'key' => 'lucent_key'])->update(['values' => json_encode(['key' => $project->generatePrivateKey()])]);
-
-            return back()->with(sendToast('Project key regenerated.'));
+        if(!canDo($project->team_id, auth()->id(), 'can_generate_key')) {
+            return back()->with(sendToast('You do not have permission.', ERROR));
         }
 
-        return back()->with(sendToast('You do not have permission.', ERROR));
+        ProjectConfig::updateOrCreate(['project_id' => $project->id, 'key' => 'lucent_key'], ['key' => 'lucent_key', 'values' => ['key' => $project->generatePrivateKey()]]);
+        return back()->with(sendToast('Project key regenerated.'));
+    }
+
+    public function storeOpenAiKey() 
+    {
+        ProjectConfig::updateOrCreate(['project_id' => request()->id, 'key' => 'openai_key'], ['key' => 'openai_key', 'values' => ['key' => request()->key]]);
+        return response()->json(['success' => true, 'message' => 'Project key regenerated.', 'data' => []]);
     }
 }

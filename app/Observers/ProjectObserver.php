@@ -41,6 +41,11 @@ class ProjectObserver
             ],
             [
                 'project_id' => $project->id,
+                'key' => 'openai_key',
+                'values' => json_encode(['key' => ''])
+            ],
+            [
+                'project_id' => $project->id,
                 'key' => 'notifications',
                 'values' => json_encode(['email' => '', 'slack' => '', 'webhooks' => '', 'sms' => ''])
             ],

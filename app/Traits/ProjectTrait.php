@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Project;
+use App\Models\ProjectConfig;
 
 trait ProjectTrait 
 {
@@ -32,5 +33,10 @@ trait ProjectTrait
         }
 
         return $name;
+    }
+
+    private function getAllConfigurations($where = []): object
+    {
+        return ProjectConfig::where($where)->get();
     }
 }

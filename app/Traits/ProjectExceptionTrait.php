@@ -5,6 +5,7 @@ namespace App\Traits;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Exception;
+use App\Models\Project;
 
 trait ProjectExceptionTrait 
 {
@@ -19,10 +20,9 @@ trait ProjectExceptionTrait
         return "I encountered an exception in my Laravel application. Here are the details:\n - Exception Class: {$exception->name}\n - Exception Message: {$exception->message}\n - PHP Version: {$exception->detail->app->php_version}\n - Laravel Version: {$exception->detail->app->laravel_version}\n Given these details, what could be the possible cause of the exception and how can I resolve it?";
     }
 
-    private function aiSolution($prompt) 
+    private function aiSolution($prompt, $apiKey) 
     {
         try{
-            $apiKey = config('app.openai_api_key');
             $url = 'https://api.openai.com/v1/completions';
         
             $data = [
@@ -159,5 +159,14 @@ trait ProjectExceptionTrait
         $log->chartData = array_values($times);
 
         return $log;
+    }
+
+    private function hasOpenaiKey(Project $project): bool
+    {
+        if(!$project->relationLoaded('config')){
+            $project->load('config');
+        }
+
+        return $project->config->where('key', 'openai_key')->first()->values['key'] ? true : false;
     }
 }
