@@ -30,7 +30,6 @@ Route::middleware(['auth', 'check.name'])->group(function () {
 
     Route::group(['prefix'=>'members','as'=>'members.'],function(){
         Route::post('/add',[MemberController::class, 'add'])->name('add');
-       Route::get('/invite',[MemberController::class, 'acceptInvitation'])->name('invite');
        Route::get('remove/{user_id}/{team_id}',[MemberController::class, 'remove'])->name('remove');
     });
     

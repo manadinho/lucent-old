@@ -31,7 +31,7 @@
     </div>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="{ open: false, email: '', role: '', close: function() { this.open = false; this.email = ''; this.role = ''; } }">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="{ open: false, email: '', password: '', name: '', role: '', close: function() { this.open = false; this.email = ''; this.role = ''; } }">
             <div>
                 @if(canDo($team->id, auth()->id(), 'can_add_member'))
                     <x-primary-button class="ml-3" @click=" open = true">

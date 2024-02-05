@@ -7,11 +7,22 @@
     <form method="POST" action="{{ route('members.add') }}">
         @csrf
 
-        <!-- MEMBER EMAIL -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" x-model="name" type="text" name="name" value='' required autofocus />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" x-model="email" type="email" name="email" value='' required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <div>
+            <x-input-label for="name" :value="__('Password')" />
+            <x-text-input id="password" class="block mt-1 w-full" x-model="password" type="text" name="password" :value="old('password')" required autofocus />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div>

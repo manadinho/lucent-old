@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MemberRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-
-
+use App\Traits\MemberTrait;
+use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {   
+    use MemberTrait;
+
     protected $teamId;
     
     public function add(MemberRequest $req)
@@ -19,7 +21,7 @@ class MemberController extends Controller
 
         $this->teamId = $req->teamId;
 
-        $user = User::where('email', $req->email)->with('teams')->first();
+        $user = $this->getfirstUser(['email' => $req->email]);
 
         $member = $user ? $user->teams->where('id',$req->teamId)->first() : null;
         
@@ -28,7 +30,9 @@ class MemberController extends Controller
             if(!$user) {
                 $isNewUser = true;
                 $user = User::create([
+                    'name' => $req->name,
                     'email' => $req->email,
+                    'password' => Hash::make($req->password),
                 ]);
             }
 
@@ -36,6 +40,11 @@ class MemberController extends Controller
         }
       
         return back()->with(sendToast('Already existed in current Team',ERROR));         
+    }
+
+    private function getfirstUser($where = []) 
+    {
+        return User::where($where)->with('teams')->first();
     }
 
     public function remove($user_id, $team_id)
