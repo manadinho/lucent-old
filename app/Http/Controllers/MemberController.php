@@ -26,9 +26,7 @@ class MemberController extends Controller
         $member = $user ? $user->teams->where('id',$req->teamId)->first() : null;
         
         if (!$member) {
-            $isNewUser = false;
             if(!$user) {
-                $isNewUser = true;
                 $user = User::create([
                     'name' => $req->name,
                     'email' => $req->email,
@@ -36,15 +34,10 @@ class MemberController extends Controller
                 ]);
             }
 
-            return  $this->sendInvitation($user, $isNewUser);    
+            return  $this->addUserToTeam($user);    
         }
       
         return back()->with(sendToast('Already existed in current Team',ERROR));         
-    }
-
-    private function getfirstUser($where = []) 
-    {
-        return User::where($where)->with('teams')->first();
     }
 
     public function remove($user_id, $team_id)

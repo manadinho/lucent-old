@@ -21,7 +21,7 @@
 
         <div>
             <x-input-label for="name" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" x-model="password" type="text" name="password" :value="old('password')" required autofocus />
+            <x-text-input id="password" class="block mt-1 w-full" x-model="password" type="password" name="password" :value="old('password')" required autofocus />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
