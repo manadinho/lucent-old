@@ -50,3 +50,10 @@ function canDo(string $team_id, string $user_id, string $permission_name): bool
         return false;
     }
 }
+
+function formatAiResponse($text) 
+{
+    $textWithBr = nl2br($text, false);
+
+    return preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $textWithBr);
+}

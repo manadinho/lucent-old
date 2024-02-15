@@ -11,6 +11,12 @@ use \Illuminate\Contracts\View\View;
 class ProjectExceptionController extends Controller
 {
     use ProjectExceptionTrait;
+
+    protected $aiServiceName = 'OPENAI';
+
+    protected $prompt = '';
+
+    protected $aiKey = '';
     
     /**
      * Display the index page for exceptions.
@@ -36,7 +42,7 @@ class ProjectExceptionController extends Controller
 
         $project = Project::find(request()->project);
 
-        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $exceptions, 'hasOpenaiKey' => $this->hasOpenaiKey($project)]);
+        return view('exceptions.partials.exception-card', ['project' => $project, 'exceptions' => $exceptions, 'hasAiKey' => $this->hasAiKey($project)]);
     }
 
     public function count()
@@ -115,19 +121,31 @@ class ProjectExceptionController extends Controller
     {
         try{
             $project = Project::with('config')->find($exception->project_id);
-            $openaiKey = $project->config->where('key', 'openai_key')->first()->values['key'];
-            if(!$openaiKey) {
-                return response()->json(['success' => false, 'message' => 'OpenAI API key not found']);
+
+            $this->aiKey = $project->config->where('key', 'openai_key')->first()->values['key'];
+            
+            if(!$this->aiKey) {
+                $this->aiKey = $project->config->where('key', 'gemini_key')->first()->values['key'];
+                
+                if(!$this->aiKey) {
+                    return response()->json(['success' => false, 'message' => 'Not Single API key found']);    
+                }
+
+                $this->aiServiceName = 'GEMINI';
             }
 
             $exception->load('detail');
-            $prompt = $this->createPrompt($exception);
-            $response = $this->aiSolution($prompt, $openaiKey);
+
+            $this->createPrompt($exception);
+            
+            $response = $this->aiSolution();
+            
             $this->addAiResToException($exception, $response);
-            return response()->json(['success' => true, 'data' => $response['choices'][0]['text']]);
+            
+            return response()->json(['success' => true, 'data' => $response]);
         } catch(\Exception $e){
             // todo:: log error
-            return response()->json(['success' => false, 'message' => 'Something went wrong']);
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 

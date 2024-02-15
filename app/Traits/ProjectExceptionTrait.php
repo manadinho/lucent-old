@@ -11,7 +11,7 @@ trait ProjectExceptionTrait
 {
     private function addAiResToException($exception, $response) 
     {
-        $exception->ai_solution = $response['choices'][0]['text'];
+        $exception->ai_solution = $response;
         $exception->save();
     }
 
@@ -25,17 +25,31 @@ trait ProjectExceptionTrait
         }
         $prompt .= "  what could be the possible cause of the exception and how can I resolve it?";
 
-        return $prompt;
+        $this->prompt =  $prompt;
     }
 
-    private function aiSolution($prompt, $apiKey) 
+    private function aiSolution() 
+    {
+        try{
+            if($this->aiServiceName === 'OPENAI') {
+                return $this->aiSolutionFromOpenAi();
+            }
+
+            return $this->aiSolutionFromGemini();
+            
+        } catch(\Exception $e){
+            throw $e;
+        }
+    }
+
+    private function aiSolutionFromOpenAi() 
     {
         try{
             $url = 'https://api.openai.com/v1/completions';
         
             $data = [
                 'model' => 'gpt-3.5-turbo-instruct',
-                'prompt' => $prompt,
+                'prompt' => $this->prompt,
                 'temperature' => 0.5,
                 'max_tokens' => 150,
                 'top_p' => 1.0,
@@ -47,14 +61,49 @@ trait ProjectExceptionTrait
             $response = $client->post($url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Authorization' => 'Bearer ' . $this->aiKey,
                 ],
                 'json' => $data,
             ]);
         
             $body = $response->getBody();
             $result = json_decode($body, true);
+            $result = $result['choices'][0]['text'];
+            return $result;
+        } catch(\Exception $e){
+            throw $e;
+        }
+    }
+
+    private function aiSolutionFromGemini() 
+    {
+        try{
+            $this->prompt .= " \n need only text response.";
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$this->aiKey}";
         
+            $body = [
+                "contents" => [
+                    [
+                        "parts" => [
+                            [
+                                "text" => $this->prompt
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        
+            $client = new Client();
+            $response = $client->post($url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $body,
+            ]);
+        
+            $body = $response->getBody();
+            $result = json_decode($body, true);
+            $result =  $result['candidates'][0]['content']['parts'][0]['text'];
             return $result;
         } catch(\Exception $e){
             throw $e;
@@ -169,12 +218,21 @@ trait ProjectExceptionTrait
         return $log;
     }
 
-    private function hasOpenaiKey(Project $project): bool
+    private function hasAiKey(Project $project): bool
     {
         if(!$project->relationLoaded('config')){
             $project->load('config');
         }
 
-        return $project->config->where('key', 'openai_key')->first()->values['key'] ? true : false;
+        $keysToCheck = ['openai_key', 'gemini_key'];
+
+        foreach ($keysToCheck as $key) {
+            $configEntry = $project->config->where('key', $key)->first();
+            if ($configEntry && !empty($configEntry->values['key'])) {
+                return true; 
+            }
+        }
+
+        return false;
     }
 }

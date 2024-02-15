@@ -99,4 +99,10 @@ class ProjectController extends Controller
         ProjectConfig::updateOrCreate(['project_id' => request()->id, 'key' => 'openai_key'], ['key' => 'openai_key', 'values' => ['key' => request()->key]]);
         return response()->json(['success' => true, 'message' => 'Project key regenerated.', 'data' => []]);
     }
+
+    public function storeGeminiKey() 
+    {
+        ProjectConfig::updateOrCreate(['project_id' => request()->id, 'key' => 'gemini_key'], ['key' => 'gemini_key', 'values' => ['key' => request()->key]]);
+        return response()->json(['success' => true, 'message' => 'Project key regenerated.', 'data' => []]);
+    }
 }

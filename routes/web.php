@@ -13,7 +13,6 @@ Route::get('/', function () {
     return redirect('/dashboard');
 });
 
-
 Route::middleware(['auth', 'check.name'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -50,7 +49,7 @@ Route::middleware(['auth', 'check.name'])->group(function () {
             Route::post('/delete', [ProjectExceptionController::class, 'delete'])->name('delete');
             Route::post('/snooze', [ProjectExceptionController::class, 'markSnoozed'])->name('snooze');
             Route::post('/resolve', [ProjectExceptionController::class, 'markResolved'])->name('resolve');
-            Route::post('/generate-solution/{exception}', [ProjectExceptionController::class, 'generateSolution'])->name('generate-solution');
+            Route::get('/generate-solution/{exception}', [ProjectExceptionController::class, 'generateSolution'])->name('generate-solution');
         });
     });
 });

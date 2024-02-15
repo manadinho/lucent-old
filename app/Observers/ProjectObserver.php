@@ -46,6 +46,11 @@ class ProjectObserver
             ],
             [
                 'project_id' => $project->id,
+                'key' => 'gemini_key',
+                'values' => json_encode(['key' => ''])
+            ],
+            [
+                'project_id' => $project->id,
                 'key' => 'notifications',
                 'values' => json_encode(['email' => '', 'slack' => '', 'webhooks' => '', 'sms' => ''])
             ],
