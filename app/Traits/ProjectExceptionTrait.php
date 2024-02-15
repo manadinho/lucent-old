@@ -17,7 +17,15 @@ trait ProjectExceptionTrait
 
     private function createPrompt( $exception) 
     {
-        return "I encountered an exception in my Laravel application. Here are the details:\n - Exception Class: {$exception->name}\n - Exception Message: {$exception->message}\n - PHP Version: {$exception->detail->app->php_version}\n - Laravel Version: {$exception->detail->app->laravel_version}\n Given these details, what could be the possible cause of the exception and how can I resolve it?";
+        $prompt = 'I encountered an exception in my Laravel application. Here are the details:\n - Exception Class: {$exception->name}\n - Exception Message: {$exception->message}\n';
+        if($exception->detail->app->php_version && $exception->detail->app->laravel_version) {
+            $prompt .= " - PHP Version: {$exception->detail->app->php_version}\n - Laravel Version: {$exception->detail->app->laravel_version}\n Given these details,";
+        } else {
+            $prompt .= " - Programing language is PHP and framework is Laravel\n Given these details,";
+        }
+        $prompt .= "  what could be the possible cause of the exception and how can I resolve it?";
+
+        return $prompt;
     }
 
     private function aiSolution($prompt, $apiKey) 
