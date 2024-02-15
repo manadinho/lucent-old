@@ -18,7 +18,7 @@ trait ProjectExceptionTrait
     private function createPrompt( $exception) 
     {
         $prompt = "I encountered an exception in my Laravel application. Here are the details:\n - Exception Class: {$exception->name}\n - Exception Message: {$exception->message}\n";
-        if($exception->detail && $exception->detail->app) {
+        if(optional($exception->detail->app)->php_version) {
             $prompt .= " - PHP Version: {$exception->detail->app->php_version}\n - Laravel Version: {$exception->detail->app->laravel_version}\n Given these details,";
         } else {
             $prompt .= " - Programing language is PHP and framework is Laravel\n Given these details,";

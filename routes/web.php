@@ -39,6 +39,7 @@ Route::middleware(['auth', 'check.name'])->group(function () {
         Route::get('/configurations/{project}', [ProjectController::class, 'configurations'])->name('configurations');
         Route::get('/key-generate/{project}', [ProjectController::class, 'keyGenerate'])->name('key.generate');
         Route::post('/store-openaikey', [ProjectController::class, 'storeOpenAiKey'])->name('store.openaikey');
+        Route::post('/store-geminikey', [ProjectController::class, 'storeGeminikey'])->name('store.geminikey');
 
         Route::group(['prefix' => 'exceptions', 'as' => 'exceptions.'], function(){
             Route::get('/{project}', [ProjectExceptionController::class, 'index'])->name('index');
